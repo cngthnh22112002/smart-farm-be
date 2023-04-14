@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { HandleNotificationDto } from './dto/handle-notification.dto';
 import { MessageBody } from '@nestjs/websockets';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
+import { AuthGuard } from '@nestjs/passport';
+
 
 @WebSocketGateway({
   cors: {
@@ -31,8 +33,8 @@ export class SocketGatewayService {
     this.server.emit('notification', "ok");
   }
 
-  @SubscribeMessage('operator')
+  @SubscribeMessage('light')
   handleOperator(client: any, payload: any): void { 
-    this.server.emit('message', 'Hello from the server!');
+    console.log(payload.toString());
   }
 }

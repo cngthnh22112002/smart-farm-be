@@ -16,7 +16,11 @@ const user_module_1 = require("./user/user.module");
 const mongoose_module_1 = require("./mongoose/mongoose.module");
 const auth_module_1 = require("./auth/auth.module");
 const bridge_module_1 = require("./bridge/bridge.module");
+const cors = require("cors");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer.apply(cors()).forRoutes('*');
+    }
 };
 AppModule = __decorate([
     (0, common_1.Module)({
@@ -29,7 +33,7 @@ AppModule = __decorate([
             temperature_module_1.TemperatureModule,
             user_module_1.UserModule,
             auth_module_1.AuthModule,
-            bridge_module_1.BridgeModule
+            bridge_module_1.BridgeModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

@@ -33,7 +33,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], BridgeController.prototype, "connect", null);
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('subscribe'),
     __param(0, (0, common_1.Body)('topic')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

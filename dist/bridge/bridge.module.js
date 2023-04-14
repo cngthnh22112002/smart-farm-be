@@ -12,11 +12,16 @@ const bridge_service_1 = require("./bridge.service");
 const adafruit_module_1 = require("../adafruit/adafruit.module");
 const socket_gateway_module_1 = require("../socket_gateway/socket_gateway.module");
 const bridge_controller_1 = require("./bridge.controller");
+const auth_module_1 = require("../auth/auth.module");
 let BridgeModule = class BridgeModule {
 };
 BridgeModule = __decorate([
     (0, common_1.Module)({
-        imports: [adafruit_module_1.AdafruitModule, socket_gateway_module_1.SocketGatewayModule],
+        imports: [
+            auth_module_1.AuthModule,
+            adafruit_module_1.AdafruitModule,
+            socket_gateway_module_1.SocketGatewayModule
+        ],
         providers: [bridge_service_1.BridgeService],
         controllers: [bridge_controller_1.BridgeController],
     })

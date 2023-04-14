@@ -62,26 +62,20 @@ let AdafruitService = class AdafruitService {
         });
         this.client.on('message', (topic, message) => {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
-            if (topic == this.feed + 'light-sensor') {
+            if (topic == this.feed + 'iot-sensor.lux') {
                 this.socketService.server.emit('light-sensor', message.toString());
             }
-            if (topic == this.feed + 'soilmoisture-sensor') {
+            if (topic == this.feed + 'iot-sensor.sm') {
                 this.socketService.server.emit('soilmoisture-sensor', message.toString());
             }
-            if (topic == this.feed + 'humidity-sensor') {
+            if (topic == this.feed + 'iot-sensor.humi') {
                 this.socketService.server.emit('humidity-sensor', message.toString());
             }
-            if (topic == this.feed + 'temperature-sensor') {
+            if (topic == this.feed + 'iot-sensor.temp') {
                 this.socketService.server.emit('temperature-sensor', message.toString());
             }
-            if (topic == this.feed + 'fan') {
+            if (topic == this.feed + 'command-control') {
                 this.socketService.server.emit('fan', message.toString());
-            }
-            if (topic == this.feed + 'water-pumps') {
-                this.socketService.server.emit('water-pumps', message.toString());
-            }
-            if (topic == this.feed + 'light') {
-                this.socketService.server.emit('light', message.toString());
             }
         });
     }

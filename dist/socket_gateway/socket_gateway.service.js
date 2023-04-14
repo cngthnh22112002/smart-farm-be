@@ -17,7 +17,6 @@ const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 const websockets_2 = require("@nestjs/websockets");
-const class_transformer_1 = require("class-transformer");
 let SocketGatewayService = class SocketGatewayService {
     handleConnection(client) {
         console.log(`Client ${client.id} connected`);
@@ -26,11 +25,10 @@ let SocketGatewayService = class SocketGatewayService {
         console.log(`Client ${client.id} disconnected`);
     }
     handleNotification(client, data) {
-        const myDto = class_transformer_1.plainToClass;
         this.server.emit('notification', "ok");
     }
     handleOperator(client, payload) {
-        this.server.emit('message', 'Hello from the server!');
+        console.log(payload.toString());
     }
 };
 __decorate([
@@ -45,7 +43,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SocketGatewayService.prototype, "handleNotification", null);
 __decorate([
-    (0, websockets_1.SubscribeMessage)('operator'),
+    (0, websockets_1.SubscribeMessage)('light'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)

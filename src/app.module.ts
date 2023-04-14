@@ -7,6 +7,8 @@ import { UserModule } from './user/user.module';
 import { MongooseModule } from './mongoose/mongoose.module';
 import { AuthModule } from './auth/auth.module';
 import { BridgeModule } from './bridge/bridge.module';
+import { MiddlewareConsumer } from '@nestjs/common';
+import * as cors from 'cors';
 
 @Module({
   imports: [
@@ -18,9 +20,13 @@ import { BridgeModule } from './bridge/bridge.module';
     TemperatureModule,
     UserModule,
     AuthModule,
-    BridgeModule
+    BridgeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cors()).forRoutes('*');
+  }
+}

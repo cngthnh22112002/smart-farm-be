@@ -3,6 +3,7 @@ import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservice
 import { SocketGatewayService } from 'src/socket_gateway/socket_gateway.service';
 import * as mqtt from 'mqtt';
 
+
 @Injectable()
 export class AdafruitService {
 
@@ -35,7 +36,7 @@ export class AdafruitService {
     }
 
     public subscribe(topic: string): void {
-        this.client.subscribe( this.feed + topic, (err) => {
+        this.client.subscribe( this.feed + topic,(err) => {
             if (err) {
               console.log(`Error subscribing to : ${err}`);
             } else {
@@ -63,38 +64,34 @@ export class AdafruitService {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
 
             // Handle data from light-sensor
-            if(topic == this.feed + 'light-sensor') {
+            if(topic == this.feed + 'iot-sensor.lux') {
                 this.socketService.server.emit('light-sensor', message.toString());
             }
 
             // Handle data from soilmoisture-sensor
-            if(topic == this.feed + 'soilmoisture-sensor') {
+            if(topic == this.feed + 'iot-sensor.sm') {
                 this.socketService.server.emit('soilmoisture-sensor', message.toString());
             }
 
             // Handle data from humidity-sensor
-            if(topic == this.feed + 'humidity-sensor') {
+            if(topic == this.feed + 'iot-sensor.humi') {
                 this.socketService.server.emit('humidity-sensor', message.toString())
             }
 
             // Handle data from temperature-sensor
-            if(topic == this.feed + 'temperature-sensor') {
+            if(topic == this.feed + 'iot-sensor.temp') {
                 this.socketService.server.emit('temperature-sensor', message.toString())
+                /*
+                const fan = this.feed + 'fan'
+                if(Number(message) > 20) {
+                    this.client.publish(fan, 'ON');
+                }
+                */
             }
 
             // Handle data from fan
-            if(topic == this.feed + 'fan') {
+            if(topic == this.feed + 'command-control') {
                 this.socketService.server.emit('fan', message.toString())     
-            }
-
-            // Handle data from water-pumps
-            if(topic == this.feed + 'water-pumps') {
-                this.socketService.server.emit('water-pumps', message.toString())
-            }
-
-            // Handle data from light
-            if(topic == this.feed + 'light') {
-                this.socketService.server.emit('light', message.toString())
             }
         });
     }
