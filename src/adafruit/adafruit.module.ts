@@ -4,7 +4,6 @@ import { SensorsModule } from 'src/sensors/sensors.module';
 import { SocketGatewayService } from 'src/socket_gateway/socket_gateway.service';
 import { MqttService } from './adafruit_config';
 import { DevicesModule } from 'src/devices/devices.module';
-import { DevicesService } from 'src/devices/devices.service';
 
 @Module({
     imports: [
