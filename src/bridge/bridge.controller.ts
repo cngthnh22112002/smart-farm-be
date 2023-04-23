@@ -1,9 +1,6 @@
-<<<<<<< Updated upstream
-import { Body, Controller, Get, Post } from '@nestjs/common';
-=======
 import { Body, Controller, Get, Param, Post,Request, UseGuards } from '@nestjs/common';
->>>>>>> Stashed changes
 import { BridgeService } from './bridge.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('bridge')
 export class BridgeController {

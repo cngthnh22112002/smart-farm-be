@@ -1,15 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-<<<<<<< Updated upstream
-import { HandleNotificationDto } from './dto/handle-notification.dto';
-import { MessageBody } from '@nestjs/websockets';
-import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
-=======
 
-
->>>>>>> Stashed changes
 
 @WebSocketGateway({
   cors: {
@@ -42,13 +34,14 @@ export class SocketGatewayService {
     this.server.emit('notification', "ok");
   }
 
-<<<<<<< Updated upstream
   @SubscribeMessage('operator')
   handleOperator(client: any, payload: any): void { 
     this.server.emit('message', 'Hello from the server!');
-=======
+  }
+
+
   @SubscribeMessage('led')
-  handleLed(client: any, payload: any) { 
+  handleLed(client: any, payload: any): void { 
     
   }
 
@@ -60,6 +53,5 @@ export class SocketGatewayService {
   @SubscribeMessage('pump')
   handleWaterPump(client: any, payload: any) { 
     
->>>>>>> Stashed changes
   }
 }

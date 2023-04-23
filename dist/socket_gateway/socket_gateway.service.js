@@ -13,11 +13,6 @@ exports.SocketGatewayService = void 0;
 const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
-<<<<<<< Updated upstream
-const websockets_2 = require("@nestjs/websockets");
-const class_transformer_1 = require("class-transformer");
-=======
->>>>>>> Stashed changes
 let SocketGatewayService = class SocketGatewayService {
     handleConnection(client) {
         console.log(`Client ${client.id} connected`);
@@ -29,23 +24,17 @@ let SocketGatewayService = class SocketGatewayService {
     handleDisconnect(client) {
         console.log(`Client ${client.id} disconnected`);
     }
-<<<<<<< Updated upstream
-    handleNotification(client, data) {
-        const myDto = class_transformer_1.plainToClass;
+    async handleNotification(client, payload) {
         this.server.emit('notification', "ok");
     }
     handleOperator(client, payload) {
         this.server.emit('message', 'Hello from the server!');
-=======
-    async handleNotification(client, payload) {
-        this.server.emit('notification', "ok");
     }
     handleLed(client, payload) {
     }
     handleFan(client, payload) {
     }
     handleWaterPump(client, payload) {
->>>>>>> Stashed changes
     }
 };
 __decorate([
@@ -65,11 +54,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SocketGatewayService.prototype, "handleNotification", null);
 __decorate([
-<<<<<<< Updated upstream
     (0, websockets_1.SubscribeMessage)('operator'),
-=======
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], SocketGatewayService.prototype, "handleOperator", null);
+__decorate([
     (0, websockets_1.SubscribeMessage)('led'),
->>>>>>> Stashed changes
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)

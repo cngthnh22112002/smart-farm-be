@@ -32,6 +32,16 @@ let AdafruitService = class AdafruitService {
             status: ''
         };
     }
+    subscribe(client, topic) {
+        client.subscribe(this.feed + topic, (err) => {
+            if (err) {
+                console.log(`Error subscribing to : ${err}`);
+            }
+            else {
+                console.log(`Subscribed to ${topic}`);
+            }
+        });
+    }
     public(client, topic, message) {
         client.on('connect', () => {
             client.publish(this.feed + topic, message, (err) => {
@@ -55,28 +65,6 @@ let AdafruitService = class AdafruitService {
         }
         client.on('message', async (topic, message) => {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
-<<<<<<< Updated upstream
-            if (topic == this.feed + 'light-sensor') {
-                this.socketService.server.emit('light-sensor', message.toString());
-            }
-            if (topic == this.feed + 'soilmoisture-sensor') {
-                this.socketService.server.emit('soilmoisture-sensor', message.toString());
-            }
-            if (topic == this.feed + 'humidity-sensor') {
-                this.socketService.server.emit('humidity-sensor', message.toString());
-            }
-            if (topic == this.feed + 'temperature-sensor') {
-                this.socketService.server.emit('temperature-sensor', message.toString());
-            }
-            if (topic == this.feed + 'fan') {
-                this.socketService.server.emit('fan', message.toString());
-            }
-            if (topic == this.feed + 'water-pumps') {
-                this.socketService.server.emit('water-pumps', message.toString());
-            }
-            if (topic == this.feed + 'light') {
-                this.socketService.server.emit('light', message.toString());
-=======
             if (topic == this.feed + 'iot-sensor.lux') {
                 const now = new Date();
                 const data = {
@@ -138,7 +126,12 @@ let AdafruitService = class AdafruitService {
             }
             if (topic == this.feed + 'iot-control.pump') {
                 this.socketService.server.emit('pump', message.toString());
->>>>>>> Stashed changes
+            }
+            if (topic == this.feed + 'water-pumps') {
+                this.socketService.server.emit('water-pumps', message.toString());
+            }
+            if (topic == this.feed + 'light') {
+                this.socketService.server.emit('light', message.toString());
             }
         });
     }

@@ -11,25 +11,17 @@ const common_1 = require("@nestjs/common");
 const bridge_service_1 = require("./bridge.service");
 const adafruit_module_1 = require("../adafruit/adafruit.module");
 const bridge_controller_1 = require("./bridge.controller");
-<<<<<<< Updated upstream
-=======
 const auth_module_1 = require("../auth/auth.module");
 const adafruit_config_1 = require("../adafruit/adafruit_config");
->>>>>>> Stashed changes
 let BridgeModule = class BridgeModule {
 };
 BridgeModule = __decorate([
     (0, common_1.Module)({
-<<<<<<< Updated upstream
-        imports: [adafruit_module_1.AdafruitModule, socket_gateway_module_1.SocketGatewayModule],
-        providers: [bridge_service_1.BridgeService],
-=======
         imports: [
             auth_module_1.AuthModule,
             adafruit_module_1.AdafruitModule
         ],
         providers: [adafruit_config_1.MqttService, bridge_service_1.BridgeService],
->>>>>>> Stashed changes
         controllers: [bridge_controller_1.BridgeController],
     })
 ], BridgeModule);

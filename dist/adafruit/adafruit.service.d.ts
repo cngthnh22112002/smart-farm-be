@@ -9,6 +9,7 @@ export declare class AdafruitService {
     private led;
     private fan;
     private pump;
+    subscribe(client: any, topic: string): void;
     public(client: any, topic: string, message: string): void;
     handleData(client: any, user: User, gardenId: string): void;
 }
