@@ -11,57 +11,51 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdafruitService = void 0;
 const common_1 = require("@nestjs/common");
-const microservices_1 = require("@nestjs/microservices");
 const socket_gateway_service_1 = require("../socket_gateway/socket_gateway.service");
-const mqtt = require("mqtt");
+const sensors_service_1 = require("../sensors/sensors.service");
+const mongoose_1 = require("mongoose");
 let AdafruitService = class AdafruitService {
-    constructor(socketService) {
+    constructor(socketService, sensorsService) {
         this.socketService = socketService;
-        this.host = "io.adafruit.com";
-        this.ada_port = "1883";
-        this.clientId = "smartFarm_backend";
+        this.sensorsService = sensorsService;
         this.feed = process.env.ADA_USERNAME + "/feeds/";
-        this.connectUrl = `mqtt://${this.host}:${this.ada_port}`;
-        this.option = {
-            clientId: this.clientId,
-            clean: true,
-            connectTimeout: 10000,
-            username: process.env.ADA_USERNAME,
-            password: process.env.ADA_PASSWORD,
-            reconnectPeriod: 6000,
+        this.led = {
+            ledId: '',
+            status: ''
+        };
+        this.fan = {
+            fanId: '',
+            status: ''
+        };
+        this.pump = {
+            pumpId: '',
+            status: ''
         };
     }
-    getClient() {
-        return this.client;
-    }
-    getClientProxy() {
-        return this.clientProxy;
-    }
-    subscribe(topic) {
-        this.client.subscribe(this.feed + topic, (err) => {
-            if (err) {
-                console.log(`Error subscribing to : ${err}`);
-            }
-            else {
-                console.log(`Subscribed to ${topic}`);
-            }
+    public(client, topic, message) {
+        client.on('connect', () => {
+            client.publish(this.feed + topic, message, (err) => {
+                if (err) {
+                    console.error('failed to publish message:', err);
+                }
+                else {
+                    console.log('message published successfully');
+                }
+            });
         });
     }
-    connect() {
-        this.client = mqtt.connect(this.connectUrl, this.option);
-        this.clientProxy = microservices_1.ClientProxyFactory.create({
-            transport: microservices_1.Transport.MQTT,
-            options: {
-                host: 'localhost',
-                port: 3000,
-            },
-        });
-        this.client.on('connect', () => {
-            console.log('MQTT client connected');
-            this.socketService.server.emit('light-sensor', "Hello");
-        });
-        this.client.on('message', (topic, message) => {
+    handleData(client, user, gardenId) {
+        const isValidId = mongoose_1.default.isValidObjectId(gardenId);
+        if (!isValidId) {
+            throw new common_1.BadRequestException('Please enter correct id.');
+        }
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        if (gardenIndex === -1) {
+            throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
+        client.on('message', async (topic, message) => {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
+<<<<<<< Updated upstream
             if (topic == this.feed + 'light-sensor') {
                 this.socketService.server.emit('light-sensor', message.toString());
             }
@@ -82,13 +76,77 @@ let AdafruitService = class AdafruitService {
             }
             if (topic == this.feed + 'light') {
                 this.socketService.server.emit('light', message.toString());
+=======
+            if (topic == this.feed + 'iot-sensor.lux') {
+                const now = new Date();
+                const data = {
+                    value: message.toString(),
+                    createAt: now.toISOString()
+                };
+                this.socketService.server.emit('light-sensor', JSON.stringify(data));
+                const record = {
+                    gardenId: user.gardens[gardenIndex]._id,
+                    value: parseFloat(message.toString())
+                };
+                await this.sensorsService.createLight(user, record);
+            }
+            if (topic == this.feed + 'iot-sensor.sm') {
+                const now = new Date();
+                const data = {
+                    value: message.toString(),
+                    createAt: now.toISOString()
+                };
+                this.socketService.server.emit('soilmoisture-sensor', JSON.stringify(data));
+                const record = {
+                    gardenId: user.gardens[gardenIndex]._id,
+                    value: parseFloat(message.toString())
+                };
+                await this.sensorsService.createSm(user, record);
+            }
+            if (topic == this.feed + 'iot-sensor.humi') {
+                const now = new Date();
+                const data = {
+                    value: message.toString(),
+                    createAt: now.toISOString()
+                };
+                this.socketService.server.emit('humidity-sensor', JSON.stringify(data));
+                const record = {
+                    gardenId: user.gardens[gardenIndex]._id,
+                    value: parseFloat(message.toString())
+                };
+                await this.sensorsService.createHumi(user, record);
+            }
+            if (topic == this.feed + 'iot-sensor.temp') {
+                const now = new Date();
+                const data = {
+                    value: message.toString(),
+                    createAt: now.toISOString()
+                };
+                console.log(data);
+                this.socketService.server.emit('temperature-sensor', JSON.stringify(data));
+                const record = {
+                    gardenId: user.gardens[gardenIndex]._id,
+                    value: parseFloat(message.toString())
+                };
+                await this.sensorsService.createTemp(user, record);
+            }
+            if (topic == this.feed + 'iot-control.fan') {
+                this.socketService.server.emit('fan', message.toString());
+            }
+            if (topic == this.feed + 'iot-control.led') {
+                this.socketService.server.emit('led', message.toString());
+            }
+            if (topic == this.feed + 'iot-control.pump') {
+                this.socketService.server.emit('pump', message.toString());
+>>>>>>> Stashed changes
             }
         });
     }
 };
 AdafruitService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [socket_gateway_service_1.SocketGatewayService])
+    __metadata("design:paramtypes", [socket_gateway_service_1.SocketGatewayService,
+        sensors_service_1.SensorsService])
 ], AdafruitService);
 exports.AdafruitService = AdafruitService;
 //# sourceMappingURL=adafruit.service.js.map

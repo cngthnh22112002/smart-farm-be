@@ -1,5 +1,5 @@
 
-import { IsString, IsNotEmpty, IsArray, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength } from 'class-validator';
 
 export class SignUpDto {
     @IsNotEmpty()
@@ -10,4 +10,5 @@ export class SignUpDto {
     @IsString()
     @MinLength(6)
     readonly password: String
+
 }

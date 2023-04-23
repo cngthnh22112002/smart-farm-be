@@ -1,1 +1,5 @@
+<<<<<<< Updated upstream
 {"version":3,"file":"bridge.module.js","sourceRoot":"","sources":["../../src/bridge/bridge.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAwC;AACxC,qDAAiD;AACjD,iEAA8D;AAC9D,mFAA+E;AAC/E,2DAAuD;AAOhD,IAAM,YAAY,GAAlB,MAAM,YAAY;CAAG,CAAA;AAAf,YAAY;IALxB,IAAA,eAAM,EAAC;QACN,OAAO,EAAC,CAAC,gCAAc,EAAE,2CAAmB,CAAC;QAC7C,SAAS,EAAE,CAAC,8BAAa,CAAC;QAC1B,WAAW,EAAE,CAAC,oCAAgB,CAAC;KAChC,CAAC;GACW,YAAY,CAAG;AAAf,oCAAY"}
+=======
+{"version":3,"file":"bridge.module.js","sourceRoot":"","sources":["../../src/bridge/bridge.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAwC;AACxC,qDAAiD;AACjD,iEAA8D;AAC9D,2DAAuD;AACvD,qDAAkD;AAClD,iEAA2D;AAUpD,IAAM,YAAY,GAAlB,MAAM,YAAY;CAAG,CAAA;AAAf,YAAY;IARxB,IAAA,eAAM,EAAC;QACN,OAAO,EAAC;YACN,wBAAU;YACV,gCAAc;SACf;QACD,SAAS,EAAE,CAAC,6BAAW,EAAC,8BAAa,CAAC;QACtC,WAAW,EAAE,CAAC,oCAAgB,CAAC;KAChC,CAAC;GACW,YAAY,CAAG;AAAf,oCAAY"}
+>>>>>>> Stashed changes

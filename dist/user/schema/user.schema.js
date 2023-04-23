@@ -15,13 +15,45 @@ const mongoose_2 = require("mongoose");
 let User = class User extends mongoose_2.Document {
 };
 __decorate([
-    (0, mongoose_1.Prop)({ username: String, required: true, unique: true }),
+    (0, mongoose_1.Prop)({ type: String, required: true, unique: true }),
     __metadata("design:type", String)
 ], User.prototype, "username", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ password: String, required: true }),
+    (0, mongoose_1.Prop)({ type: String, required: true }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
+], User.prototype, "name", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
+], User.prototype, "email", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: Date }),
+    __metadata("design:type", Date)
+], User.prototype, "birthdate", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
+], User.prototype, "address", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
+], User.prototype, "phone", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'Garden' }], default: [] }),
+    __metadata("design:type", Array)
+], User.prototype, "gardens", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'Notification' }], default: [] }),
+    __metadata("design:type", Array)
+], User.prototype, "notifications", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [{ type: mongoose_2.Types.ObjectId, ref: 'Dictionary' }], default: [] }),
+    __metadata("design:type", Array)
+], User.prototype, "dictionaries", void 0);
 User = __decorate([
     (0, mongoose_1.Schema)()
 ], User);

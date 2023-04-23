@@ -12,23 +12,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BridgeService = void 0;
 const common_1 = require("@nestjs/common");
 const adafruit_service_1 = require("../adafruit/adafruit.service");
-const socket_gateway_service_1 = require("../socket_gateway/socket_gateway.service");
+const adafruit_config_1 = require("../adafruit/adafruit_config");
 let BridgeService = class BridgeService {
-    constructor(adafruitService, socketService) {
+    constructor(adafruitService, mqttService) {
         this.adafruitService = adafruitService;
-        this.socketService = socketService;
+        this.mqttService = mqttService;
+        this.mqttService.init();
     }
-    connect() {
-        this.adafruitService.connect();
-    }
-    subcribe(topic) {
-        this.adafruitService.subscribe(topic);
+    handleData(user, gardenId) {
+        const client = this.mqttService.getClient();
+        this.adafruitService.handleData(client, user, gardenId);
     }
 };
 BridgeService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [adafruit_service_1.AdafruitService,
-        socket_gateway_service_1.SocketGatewayService])
+        adafruit_config_1.MqttService])
 ], BridgeService);
 exports.BridgeService = BridgeService;
 //# sourceMappingURL=bridge.service.js.map

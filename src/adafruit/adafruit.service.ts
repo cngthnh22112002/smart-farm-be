@@ -1,39 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { SocketGatewayService } from 'src/socket_gateway/socket_gateway.service';
-import * as mqtt from 'mqtt';
+import { User } from 'src/user/schema/user.schema';
+import { SensorsService } from 'src/sensors/sensors.service';
+import mongoose from 'mongoose';
+
 
 @Injectable()
 export class AdafruitService {
+    constructor(
+        private socketService: SocketGatewayService,
+        private sensorsService: SensorsService,
+    )  {}
+    
 
-    constructor(private socketService: SocketGatewayService) {}
-
-    private client: mqtt.Client;
-    private clientProxy: ClientProxy;
-
-    private host = "io.adafruit.com";
-    private ada_port = "1883";
-    private clientId = "smartFarm_backend";
     private feed = process.env.ADA_USERNAME + "/feeds/";
-
-    private connectUrl = `mqtt://${this.host}:${this.ada_port}`;
-    private option = {
-        clientId: this.clientId,
-        clean: true,
-        connectTimeout: 10000,
-        username: process.env.ADA_USERNAME,
-        password: process.env.ADA_PASSWORD,
-        reconnectPeriod: 6000,
+    private led = {
+        ledId: '',
+        status: ''
     }
 
-    public getClient(): mqtt.Client {
-        return this.client;
+    private fan = {
+        fanId: '',
+        status: ''
     }
 
-    public getClientProxy(): ClientProxy {
-        return this.clientProxy;
+    private pump = {
+        pumpId: '',
+        status: ''
     }
 
+<<<<<<< Updated upstream
     public subscribe(topic: string): void {
         this.client.subscribe( this.feed + topic, (err) => {
             if (err) {
@@ -42,27 +38,37 @@ export class AdafruitService {
               console.log(`Subscribed to ${topic}`);
             }
         });
+=======
+    public public(client: any, topic: string, message: string): void {
+        client.on('connect', () => {    
+            client.publish(this.feed + topic, message, (err: any) => {
+                if (err) {
+                    console.error('failed to publish message:', err);
+                  } else {
+                    console.log('message published successfully');
+                }
+            })
+        }); 
+>>>>>>> Stashed changes
     }
 
-    public connect(): void {
-        this.client = mqtt.connect(this.connectUrl, this.option);
-        this.clientProxy = ClientProxyFactory.create({
-            transport: Transport.MQTT,
-            options: {
-                host: 'localhost',
-                port: 3000,
-            },
-        });
 
-        this.client.on('connect', () => {    
-            console.log('MQTT client connected');
-            this.socketService.server.emit('light-sensor', "Hello");
-        });      
+    public handleData(client: any, user : User, gardenId: string): void {
+        const isValidId = mongoose.isValidObjectId(gardenId);
+        if (!isValidId) {
+          throw new BadRequestException('Please enter correct id.');
+        }
 
-        this.client.on('message', (topic: string, message: Buffer) => {
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        if(gardenIndex === -1) {
+          throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }  
+
+        client.on('message', async (topic: string, message: Buffer) => {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
 
             // Handle data from light-sensor
+<<<<<<< Updated upstream
             if(topic == this.feed + 'light-sensor') {
                 this.socketService.server.emit('light-sensor', message.toString());
             }
@@ -85,6 +91,82 @@ export class AdafruitService {
             // Handle data from fan
             if(topic == this.feed + 'fan') {
                 this.socketService.server.emit('fan', message.toString())     
+=======
+            if(topic == this.feed + 'iot-sensor.lux') {
+                const now = new Date();
+                const data = {
+                  value: message.toString(),
+                  createAt: now.toISOString()
+                };
+                this.socketService.server.emit('light-sensor', JSON.stringify(data));
+                const record = {
+                    gardenId: user.gardens[gardenIndex]._id,
+                    value: parseFloat(message.toString())
+                }
+                await this.sensorsService.createLight(user, record);
+            }
+
+            // Handle data from soilmoisture-sensor
+            if(topic == this.feed + 'iot-sensor.sm') {
+                const now = new Date();
+                const data = {
+                  value: message.toString(),
+                  createAt: now.toISOString()
+                };
+                this.socketService.server.emit('soilmoisture-sensor', JSON.stringify(data));
+                const record = {
+                    gardenId: user.gardens[gardenIndex]._id,
+                    value: parseFloat(message.toString())
+                }
+                await this.sensorsService.createSm(user, record);
+            }
+
+            // Handle data from humidity-sensor
+            if(topic == this.feed + 'iot-sensor.humi') {
+                const now = new Date();
+                const data = {
+                  value: message.toString(),
+                  createAt: now.toISOString()
+                };
+                this.socketService.server.emit('humidity-sensor', JSON.stringify(data));
+
+                const record = {
+                    gardenId: user.gardens[gardenIndex]._id,
+                    value: parseFloat(message.toString())
+                }
+                await this.sensorsService.createHumi(user, record);
+            }
+
+            // Handle data from temperature-sensor
+            if(topic == this.feed + 'iot-sensor.temp') {
+                const now = new Date();
+                const data = {
+                  value: message.toString(),
+                  createAt: now.toISOString()
+                };
+                console.log(data);
+                this.socketService.server.emit('temperature-sensor', JSON.stringify(data));
+                const record = {
+                    gardenId: user.gardens[gardenIndex]._id,
+                    value: parseFloat(message.toString())
+                }
+                await this.sensorsService.createTemp(user, record);
+            }
+
+            // Handle data from fan
+            if(topic == this.feed + 'iot-control.fan') {
+                this.socketService.server.emit('fan', message.toString())      
+            }
+
+            // Handle data from led
+            if(topic == this.feed + 'iot-control.led') {
+                this.socketService.server.emit('led', message.toString())     
+            }
+
+            // Handle data from fan
+            if(topic == this.feed + 'iot-control.pump') {
+                this.socketService.server.emit('pump', message.toString())     
+>>>>>>> Stashed changes
             }
 
             // Handle data from water-pumps
@@ -98,4 +180,5 @@ export class AdafruitService {
             }
         });
     }
+
 }

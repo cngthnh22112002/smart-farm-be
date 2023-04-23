@@ -1,2 +1,2 @@
-export declare class MongooseModule {
+export declare class MongooseConnectiton {
 }

@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { AdafruitService } from 'src/adafruit/adafruit.service';
-import { SocketGatewayService } from 'src/socket_gateway/socket_gateway.service';
+import { MqttService } from 'src/adafruit/adafruit_config';
+import { User } from 'src/user/schema/user.schema';
 
 @Injectable()
 export class BridgeService {
     constructor(
         private adafruitService: AdafruitService,
-        private socketService: SocketGatewayService 
-    ) {}
-
-    connect(): void {
-        this.adafruitService.connect();
+        private mqttService: MqttService
+    ) {
+        this.mqttService.init();
     }
 
-    subcribe(topic: string): void {
-        this.adafruitService.subscribe(topic);
+    handleData(user: User, gardenId: string): void {
+        const client = this.mqttService.getClient();
+        this.adafruitService.handleData(client, user, gardenId);
     }
 }

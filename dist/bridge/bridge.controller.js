@@ -15,23 +15,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BridgeController = void 0;
 const common_1 = require("@nestjs/common");
 const bridge_service_1 = require("./bridge.service");
+const passport_1 = require("@nestjs/passport");
 let BridgeController = class BridgeController {
     constructor(bridgeService) {
         this.bridgeService = bridgeService;
     }
-    connect() {
-        this.bridgeService.connect();
+    async handleData(req, gardenId) {
+        this.bridgeService.handleData(req.user, gardenId);
     }
     subcribe(topic) {
-        this.bridgeService.subcribe(topic);
     }
 };
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], BridgeController.prototype, "connect", null);
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], BridgeController.prototype, "handleData", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)('topic')),

@@ -1,11 +1,23 @@
-import { Controller, Get, Param, Post, Put, Delete, Body } from '@nestjs/common';
+import { Controller, Get, Put, Body, UseGuards, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schema/user.schema';
-import { CreateUserDto } from './dto/create-user.dto';
-import { NotFoundException } from '@nestjs/common';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  
+
+  @UseGuards(AuthGuard())
+  @Get()
+  async getCurrentUser(@Request() req): Promise<User> {
+      return this.userService.getCurrentUser(req.user);
+  }
+
+  @UseGuards(AuthGuard())
+  @Put()
+  async updateUser(@Request() req, @Body() updateUser: UpdateUserDto): Promise<User> {
+      return this.userService.updateUser(req.user, updateUser);
+  } 
 }

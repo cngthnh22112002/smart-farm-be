@@ -8,29 +8,44 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocketGatewayService = void 0;
 const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
+<<<<<<< Updated upstream
 const websockets_2 = require("@nestjs/websockets");
 const class_transformer_1 = require("class-transformer");
+=======
+>>>>>>> Stashed changes
 let SocketGatewayService = class SocketGatewayService {
     handleConnection(client) {
         console.log(`Client ${client.id} connected`);
+        this.server.emit('message', 'Hello, client!');
+    }
+    handleMessage(client, payload) {
+        return 'Hello world!';
     }
     handleDisconnect(client) {
         console.log(`Client ${client.id} disconnected`);
     }
+<<<<<<< Updated upstream
     handleNotification(client, data) {
         const myDto = class_transformer_1.plainToClass;
         this.server.emit('notification', "ok");
     }
     handleOperator(client, payload) {
         this.server.emit('message', 'Hello from the server!');
+=======
+    async handleNotification(client, payload) {
+        this.server.emit('notification', "ok");
+    }
+    handleLed(client, payload) {
+    }
+    handleFan(client, payload) {
+    }
+    handleWaterPump(client, payload) {
+>>>>>>> Stashed changes
     }
 };
 __decorate([
@@ -38,18 +53,39 @@ __decorate([
     __metadata("design:type", socket_io_1.Server)
 ], SocketGatewayService.prototype, "server", void 0);
 __decorate([
+    (0, websockets_1.SubscribeMessage)('message'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", String)
+], SocketGatewayService.prototype, "handleMessage", null);
+__decorate([
     (0, websockets_1.SubscribeMessage)('notification'),
-    __param(1, (0, websockets_2.MessageBody)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SocketGatewayService.prototype, "handleNotification", null);
 __decorate([
+<<<<<<< Updated upstream
     (0, websockets_1.SubscribeMessage)('operator'),
+=======
+    (0, websockets_1.SubscribeMessage)('led'),
+>>>>>>> Stashed changes
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
-], SocketGatewayService.prototype, "handleOperator", null);
+], SocketGatewayService.prototype, "handleLed", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('fan'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], SocketGatewayService.prototype, "handleFan", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('pump'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], SocketGatewayService.prototype, "handleWaterPump", null);
 SocketGatewayService = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {

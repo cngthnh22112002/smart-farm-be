@@ -27,6 +27,10 @@ let AuthService = class AuthService {
     async signUp(signUpDto) {
         const { username, password } = signUpDto;
         const hashedPassword = await bcrypt.hash(password, 10);
+        const existedUser = await this.userModel.findOne({ username: username });
+        if (existedUser) {
+            throw new common_1.BadRequestException("User already exist !");
+        }
         const user = await this.userModel.create({
             username,
             password: hashedPassword

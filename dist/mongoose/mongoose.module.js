@@ -6,22 +6,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MongooseModule = void 0;
+exports.MongooseConnectiton = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
-let MongooseModule = class MongooseModule {
+const mongoose_service_1 = require("./mongoose.service");
+let MongooseConnectiton = class MongooseConnectiton {
 };
-MongooseModule = __decorate([
+MongooseConnectiton = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forRootAsync({
-                useFactory: () => ({
-                    uri: process.env.MONGOOSE_URI,
-                }),
+                useClass: mongoose_service_1.MongooseConfigService,
             }),
         ],
-        exports: [mongoose_1.MongooseModule],
+        providers: [mongoose_service_1.MongooseConfigService],
     })
-], MongooseModule);
-exports.MongooseModule = MongooseModule;
+], MongooseConnectiton);
+exports.MongooseConnectiton = MongooseConnectiton;
 //# sourceMappingURL=mongoose.module.js.map

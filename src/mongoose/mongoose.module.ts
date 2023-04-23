@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule as NestMongooseModule } from '@nestjs/mongoose';
+import { MongooseModule} from '@nestjs/mongoose';
+import { MongooseConfigService } from './mongoose.service';
 
 @Module({
-    imports: [
-        NestMongooseModule.forRootAsync({
-          useFactory: () => ({
-            uri: process.env.MONGOOSE_URI,
-          }),
-        }),
-      ],
-    exports: [NestMongooseModule],
+  imports: [
+    MongooseModule.forRootAsync({
+      useClass: MongooseConfigService,
+    }),
+  ],
+  providers: [MongooseConfigService],
 })
-export class MongooseModule {}
+
+export class MongooseConnectiton {}

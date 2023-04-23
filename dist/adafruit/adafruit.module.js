@@ -9,13 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdafruitModule = void 0;
 const common_1 = require("@nestjs/common");
 const adafruit_service_1 = require("./adafruit.service");
-const socket_gateway_module_1 = require("../socket_gateway/socket_gateway.module");
+const sensors_module_1 = require("../sensors/sensors.module");
+const socket_gateway_service_1 = require("../socket_gateway/socket_gateway.service");
+const adafruit_config_1 = require("./adafruit_config");
+const devices_module_1 = require("../devices/devices.module");
 let AdafruitModule = class AdafruitModule {
 };
 AdafruitModule = __decorate([
     (0, common_1.Module)({
-        imports: [socket_gateway_module_1.SocketGatewayModule],
-        providers: [adafruit_service_1.AdafruitService],
+        imports: [
+            sensors_module_1.SensorsModule,
+            devices_module_1.DevicesModule
+        ],
+        providers: [adafruit_config_1.MqttService, socket_gateway_service_1.SocketGatewayService, adafruit_service_1.AdafruitService],
         exports: [adafruit_service_1.AdafruitService]
     })
 ], AdafruitModule);

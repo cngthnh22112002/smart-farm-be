@@ -2,11 +2,22 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { TemperatureModule } from './temperature/temperature.module';
 import { UserModule } from './user/user.module';
-import { MongooseModule } from './mongoose/mongoose.module';
+import { MongooseConnectiton } from './mongoose/mongoose.module';
 import { AuthModule } from './auth/auth.module';
 import { BridgeModule } from './bridge/bridge.module';
+<<<<<<< Updated upstream
+=======
+import { MiddlewareConsumer } from '@nestjs/common';
+import { GardenModule } from './garden/garden.module';
+import { NotificationModule } from './notification/notification.module';
+import { DictionaryModule } from './dictionary/dictionary.module';
+import { SensorsModule } from './sensors/sensors.module';
+import { DevicesService } from './devices/devices.service';
+import { DevicesModule } from './devices/devices.module';
+import * as cors from 'cors';
+>>>>>>> Stashed changes
+
 
 @Module({
   imports: [
@@ -14,11 +25,19 @@ import { BridgeModule } from './bridge/bridge.module';
       envFilePath: '.env',
       isGlobal: true
     }),
-    MongooseModule,
-    TemperatureModule,
-    UserModule,
     AuthModule,
+<<<<<<< Updated upstream
     BridgeModule
+=======
+    MongooseConnectiton,
+    UserModule,
+    BridgeModule,
+    SensorsModule,
+    GardenModule,
+    NotificationModule,
+    DictionaryModule,
+    DevicesModule,
+>>>>>>> Stashed changes
   ],
   controllers: [AppController],
   providers: [AppService],
