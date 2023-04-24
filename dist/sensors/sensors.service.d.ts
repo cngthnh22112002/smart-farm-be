@@ -22,4 +22,7 @@ export declare class SensorsService {
     createSm(user: User, createSm: CreateSmrDto): Promise<Soilmoisture>;
     createTemp(user: User, createTemp: CreateTemprDto): Promise<Temperature>;
     getTodayTemperature(user: User, gardenId: GardenIdDto): Promise<Temperature[]>;
+    getTodayLight(user: User, gardenId: GardenIdDto): Promise<Temperature[]>;
+    getTodayHumi(user: User, gardenId: GardenIdDto): Promise<Temperature[]>;
+    getTodaySm(user: User, gardenId: GardenIdDto): Promise<Temperature[]>;
 }

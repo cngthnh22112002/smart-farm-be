@@ -141,8 +141,7 @@ export class AdafruitService {
                     gardenId: user.gardens[gardenIndex]._id,
                     value: parseFloat(message.toString())
                 }
-                const x = await this.sensorsService.createTemp(user, record);
-                console.log(x);
+                await this.sensorsService.createTemp(user, record);
             }
 
             // Handle data from fan
