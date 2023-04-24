@@ -20,8 +20,10 @@ const temperature_schema_1 = require("./schema/temperature.schema");
 const light_schema_1 = require("./schema/light.schema");
 const humidity_schema_1 = require("./schema/humidity.schema");
 const soilmoisture_schema_1 = require("./schema/soilmoisture.schema");
+const garden_service_1 = require("../garden/garden.service");
 let SensorsService = class SensorsService {
-    constructor(humidityModel, lightModel, soilmoistureModel, temperatureModel) {
+    constructor(gardenService, humidityModel, lightModel, soilmoistureModel, temperatureModel) {
+        this.gardenService = gardenService;
         this.humidityModel = humidityModel;
         this.lightModel = lightModel;
         this.soilmoistureModel = soilmoistureModel;
@@ -34,7 +36,7 @@ let SensorsService = class SensorsService {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
         const humi = await this.humidityModel.create(createHumi);
-        return humi;
+        return humi.save();
     }
     async createLight(user, createLight) {
         const gardenId = createLight.gardenId;
@@ -43,7 +45,7 @@ let SensorsService = class SensorsService {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
         const light = await this.lightModel.create(createLight);
-        return light;
+        return light.save();
     }
     async createSm(user, createSm) {
         const gardenId = createSm.gardenId;
@@ -52,7 +54,7 @@ let SensorsService = class SensorsService {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
         const sm = await this.soilmoistureModel.create(createSm);
-        return sm;
+        return sm.save();
     }
     async createTemp(user, createTemp) {
         const gardenId = createTemp.gardenId;
@@ -61,16 +63,48 @@ let SensorsService = class SensorsService {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
         const temp = await this.temperatureModel.create(createTemp);
-        return temp;
+        return temp.save();
+    }
+    async getTodayTemperature(user, gardenId) {
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999);
+        const garden = await this.gardenService.getOneGarden(user, gardenId);
+        console.log(gardenId);
+        const todayTemps = await this.temperatureModel.aggregate([
+            {
+                $match: {
+                    gardenId: garden._id,
+                    createdAt: { $gte: startOfToday, $lte: endOfToday },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'gardens',
+                    localField: 'gardenId',
+                    foreignField: '_id',
+                    as: 'garden',
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    value: 1,
+                    createdAt: 1,
+                },
+            },
+        ]);
+        return todayTemps;
     }
 };
 SensorsService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_1.InjectModel)(humidity_schema_1.Humidity.name)),
-    __param(1, (0, mongoose_1.InjectModel)(light_schema_1.Light.name)),
-    __param(2, (0, mongoose_1.InjectModel)(soilmoisture_schema_1.Soilmoisture.name)),
-    __param(3, (0, mongoose_1.InjectModel)(temperature_schema_1.Temperature.name)),
-    __metadata("design:paramtypes", [mongoose.Model, mongoose.Model, mongoose.Model, mongoose.Model])
+    __param(1, (0, mongoose_1.InjectModel)(humidity_schema_1.Humidity.name)),
+    __param(2, (0, mongoose_1.InjectModel)(light_schema_1.Light.name)),
+    __param(3, (0, mongoose_1.InjectModel)(soilmoisture_schema_1.Soilmoisture.name)),
+    __param(4, (0, mongoose_1.InjectModel)(temperature_schema_1.Temperature.name)),
+    __metadata("design:paramtypes", [garden_service_1.GardenService, mongoose.Model, mongoose.Model, mongoose.Model, mongoose.Model])
 ], SensorsService);
 exports.SensorsService = SensorsService;
 //# sourceMappingURL=sensors.service.js.map

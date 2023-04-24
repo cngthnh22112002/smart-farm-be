@@ -15,6 +15,7 @@ import { DevicesModule } from 'src/devices/devices.module';
     MongooseModule.forFeature([{ name: Garden.name, schema: GardenSchema }])
   ],
   providers: [GardenService],
-  controllers: [GardenController]
+  controllers: [GardenController],
+  exports: [GardenService]
 })
 export class GardenModule {}

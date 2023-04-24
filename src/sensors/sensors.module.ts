@@ -7,10 +7,13 @@ import { Humidity, HumiditySchema } from './schema/humidity.schema';
 import { Light, LightSchema } from './schema/light.schema';
 import { Soilmoisture, SoilmoistureSchema } from './schema/soilmoisture.schema';
 import { Temperature, TemperatureSchema } from './schema/temperature.schema';
+import { SensorsController } from './sensors.controller';
+import { GardenModule } from 'src/garden/garden.module';
 
 @Module({
     imports: [
       AuthModule,
+      GardenModule,
       MongooseModule.forFeature([{ name: Garden.name, schema: GardenSchema }]),
       MongooseModule.forFeature([{ name: Humidity.name, schema: HumiditySchema }]),
       MongooseModule.forFeature([{ name: Light.name, schema: LightSchema }]),
@@ -18,6 +21,7 @@ import { Temperature, TemperatureSchema } from './schema/temperature.schema';
       MongooseModule.forFeature([{ name: Temperature.name, schema: TemperatureSchema }]),
     ],
     providers: [SensorsService],
-    exports: [SensorsService]
+    exports: [SensorsService],
+    controllers: [SensorsController]
   })
 export class SensorsModule {}

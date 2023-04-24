@@ -3,7 +3,7 @@ import { Document, Types } from "mongoose";
 
 @Schema()
 export class Fan extends Document {
-  @Prop({ type: String, default: 'off' })
+  @Prop({ type: String, default: '0' })
   status: string;
 
   @Prop({ type: Date, default: Date.now })

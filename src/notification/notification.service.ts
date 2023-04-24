@@ -13,7 +13,9 @@ export class NotificationService {
     ) {}
 
     async createNotification(user: User, notification: CreateNotificationDto): Promise<Notification> {
-        const noti = await this.notificationModel.create(notification);
+        const newNoti = {...notification, userId : user._id}
+        console.log(newNoti);
+        const noti = await this.notificationModel.create(newNoti);
         user.notifications.push(noti._id);
         user.save();
         return noti.save();
@@ -24,11 +26,13 @@ export class NotificationService {
         startOfToday.setHours(0, 0, 0, 0); // set the time to 00:00:00.000
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999); // set the time to 23:59:59.999
+
+        console.log(user._id);
       
         const todayNotifications = await this.notificationModel.aggregate([
           {
             $match: {
-              userId: user._id.toString(),
+              userId: user._id,
               createdAt: { $gte: startOfToday, $lte: endOfToday },
             },
           },
@@ -57,7 +61,15 @@ export class NotificationService {
         const notifications = await this.notificationModel.aggregate([
             {
               $match: {
-                userId: user._id.toString(),
+                userId: user._id,
+              },
+            },
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'userId',
+                foreignField: '_id',
+                as: 'user',
               },
             },
             { $limit: limit },

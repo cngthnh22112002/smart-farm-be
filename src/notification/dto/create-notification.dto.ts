@@ -1,11 +1,6 @@
-import { IsNotEmpty, IsString, IsOptional, IsMongoId, IsBoolean, IsDateString} from 'class-validator';
-import { Types } from 'mongoose';
+import { IsNotEmpty, IsString, IsOptional, IsBoolean, IsDateString} from 'class-validator';
 
 export class CreateNotificationDto {
-    @IsNotEmpty()
-    @IsMongoId()
-    userId: Types.ObjectId
-
     @IsNotEmpty()
     @IsString()
     title: string

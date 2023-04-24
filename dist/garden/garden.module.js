@@ -26,7 +26,8 @@ GardenModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: garden_schema_1.Garden.name, schema: garden_schema_1.GardenSchema }])
         ],
         providers: [garden_service_1.GardenService],
-        controllers: [garden_controller_1.GardenController]
+        controllers: [garden_controller_1.GardenController],
+        exports: [garden_service_1.GardenService]
     })
 ], GardenModule);
 exports.GardenModule = GardenModule;

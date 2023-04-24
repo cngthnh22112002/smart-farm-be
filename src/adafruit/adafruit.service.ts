@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import { Led } from 'src/devices/schema/led.schema';
 import { Fan } from 'src/devices/schema/fan.schema';
 import { Waterpump } from 'src/devices/schema/waterpump.schema';
+import { ShareService } from 'src/share/share.service';
 
 
 @Injectable()
@@ -16,6 +17,7 @@ export class AdafruitService {
     constructor(
         private socketService: SocketGatewayService,
         private sensorsService: SensorsService,
+        private shareService: ShareService,
 
         @InjectModel(Garden.name)
         private gardenModel: mongoose.Model<Garden>,
@@ -76,25 +78,6 @@ export class AdafruitService {
         else if(!garden.water_pumps) {
             throw new NotFoundException(`Water-pump with Garden ID ${gardenId} not found `);
         }
-
-        const led = await this.ledModel.findById(garden.leds[0]._id);
-        const fan = await this.fanModel.findById(garden.fans[0]._id);
-        const pump = await this.waterpumpModel.findById(garden.water_pumps[0]._id);
-
-        if(!led) {
-            throw new NotFoundException(`Led with Garden ID ${gardenId} not found `);
-        }
-        else if(!fan) {
-            throw new NotFoundException(`Fan with Garden ID ${gardenId} not found `);
-        }
-        else if(!pump) {
-            throw new NotFoundException(`Water-pump with Garden ID ${gardenId} not found `);
-        }
-
-        this.socketService.server.emit('led', led.status) 
-        this.socketService.server.emit('fan', fan.status) 
-        this.socketService.server.emit('pump', pump.status) 
-
 
         client.on('message', async (topic: string, message: Buffer) => {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
@@ -158,25 +141,26 @@ export class AdafruitService {
                     gardenId: user.gardens[gardenIndex]._id,
                     value: parseFloat(message.toString())
                 }
-                await this.sensorsService.createTemp(user, record);
+                const x = await this.sensorsService.createTemp(user, record);
+                console.log(x);
             }
 
             // Handle data from fan
             if(topic == this.feed + 'iot-control.fan') {
                 this.socketService.server.emit('fan', message.toString());
-                await fan.updateOne({status: message.toString()});  
+                this.shareService.setFanStatus(message.toString());
             }
 
             // Handle data from led
             if(topic == this.feed + 'iot-control.led') {
-                this.socketService.server.emit('led', message.toString());
-                await led.updateOne({status: message.toString()});      
+                this.socketService.server.emit('led', message.toString());  
+                this.shareService.setLedStatus(message.toString());
             }
 
             // Handle data from fan
             if(topic == this.feed + 'iot-control.pump') {
-                this.socketService.server.emit('pump', message.toString());
-                await pump.updateOne({status: message.toString()});  
+                this.socketService.server.emit('pump', message.toString()); 
+                this.shareService.setPumpStatus(message.toString());
             }
         });
     }

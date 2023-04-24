@@ -22,7 +22,9 @@ let NotificationService = class NotificationService {
         this.notificationModel = notificationModel;
     }
     async createNotification(user, notification) {
-        const noti = await this.notificationModel.create(notification);
+        const newNoti = Object.assign(Object.assign({}, notification), { userId: user._id });
+        console.log(newNoti);
+        const noti = await this.notificationModel.create(newNoti);
         user.notifications.push(noti._id);
         user.save();
         return noti.save();
@@ -32,10 +34,11 @@ let NotificationService = class NotificationService {
         startOfToday.setHours(0, 0, 0, 0);
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999);
+        console.log(user._id);
         const todayNotifications = await this.notificationModel.aggregate([
             {
                 $match: {
-                    userId: user._id.toString(),
+                    userId: user._id,
                     createdAt: { $gte: startOfToday, $lte: endOfToday },
                 },
             },
@@ -62,7 +65,15 @@ let NotificationService = class NotificationService {
         const notifications = await this.notificationModel.aggregate([
             {
                 $match: {
-                    userId: user._id.toString(),
+                    userId: user._id,
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'user',
                 },
             },
             { $limit: limit },

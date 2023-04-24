@@ -22,10 +22,12 @@ const mongoose_2 = require("mongoose");
 const led_schema_1 = require("../devices/schema/led.schema");
 const fan_schema_1 = require("../devices/schema/fan.schema");
 const waterpump_schema_1 = require("../devices/schema/waterpump.schema");
+const share_service_1 = require("../share/share.service");
 let AdafruitService = class AdafruitService {
-    constructor(socketService, sensorsService, gardenModel, ledModel, fanModel, waterpumpModel) {
+    constructor(socketService, sensorsService, shareService, gardenModel, ledModel, fanModel, waterpumpModel) {
         this.socketService = socketService;
         this.sensorsService = sensorsService;
+        this.shareService = shareService;
         this.gardenModel = gardenModel;
         this.ledModel = ledModel;
         this.fanModel = fanModel;
@@ -69,21 +71,6 @@ let AdafruitService = class AdafruitService {
         else if (!garden.water_pumps) {
             throw new common_1.NotFoundException(`Water-pump with Garden ID ${gardenId} not found `);
         }
-        const led = await this.ledModel.findById(garden.leds[0]._id);
-        const fan = await this.fanModel.findById(garden.fans[0]._id);
-        const pump = await this.waterpumpModel.findById(garden.water_pumps[0]._id);
-        if (!led) {
-            throw new common_1.NotFoundException(`Led with Garden ID ${gardenId} not found `);
-        }
-        else if (!fan) {
-            throw new common_1.NotFoundException(`Fan with Garden ID ${gardenId} not found `);
-        }
-        else if (!pump) {
-            throw new common_1.NotFoundException(`Water-pump with Garden ID ${gardenId} not found `);
-        }
-        this.socketService.server.emit('led', led.status);
-        this.socketService.server.emit('fan', fan.status);
-        this.socketService.server.emit('pump', pump.status);
         client.on('message', async (topic, message) => {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
             if (topic == this.feed + 'iot-sensor.lux') {
@@ -137,31 +124,33 @@ let AdafruitService = class AdafruitService {
                     gardenId: user.gardens[gardenIndex]._id,
                     value: parseFloat(message.toString())
                 };
-                await this.sensorsService.createTemp(user, record);
+                const x = await this.sensorsService.createTemp(user, record);
+                console.log(x);
             }
             if (topic == this.feed + 'iot-control.fan') {
                 this.socketService.server.emit('fan', message.toString());
-                await fan.updateOne({ status: message.toString() });
+                this.shareService.setFanStatus(message.toString());
             }
             if (topic == this.feed + 'iot-control.led') {
                 this.socketService.server.emit('led', message.toString());
-                await led.updateOne({ status: message.toString() });
+                this.shareService.setLedStatus(message.toString());
             }
             if (topic == this.feed + 'iot-control.pump') {
                 this.socketService.server.emit('pump', message.toString());
-                await pump.updateOne({ status: message.toString() });
+                this.shareService.setPumpStatus(message.toString());
             }
         });
     }
 };
 AdafruitService = __decorate([
     (0, common_1.Injectable)(),
-    __param(2, (0, mongoose_1.InjectModel)(garden_schema_1.Garden.name)),
-    __param(3, (0, mongoose_1.InjectModel)(led_schema_1.Led.name)),
-    __param(4, (0, mongoose_1.InjectModel)(fan_schema_1.Fan.name)),
-    __param(5, (0, mongoose_1.InjectModel)(waterpump_schema_1.Waterpump.name)),
+    __param(3, (0, mongoose_1.InjectModel)(garden_schema_1.Garden.name)),
+    __param(4, (0, mongoose_1.InjectModel)(led_schema_1.Led.name)),
+    __param(5, (0, mongoose_1.InjectModel)(fan_schema_1.Fan.name)),
+    __param(6, (0, mongoose_1.InjectModel)(waterpump_schema_1.Waterpump.name)),
     __metadata("design:paramtypes", [socket_gateway_service_1.SocketGatewayService,
-        sensors_service_1.SensorsService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        sensors_service_1.SensorsService,
+        share_service_1.ShareService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AdafruitService);
 exports.AdafruitService = AdafruitService;
 //# sourceMappingURL=adafruit.service.js.map

@@ -7,14 +7,16 @@ import mongoose from 'mongoose';
 import { Led } from 'src/devices/schema/led.schema';
 import { Fan } from 'src/devices/schema/fan.schema';
 import { Waterpump } from 'src/devices/schema/waterpump.schema';
+import { ShareService } from 'src/share/share.service';
 export declare class AdafruitService {
     private socketService;
     private sensorsService;
+    private shareService;
     private gardenModel;
     private ledModel;
     private fanModel;
     private waterpumpModel;
-    constructor(socketService: SocketGatewayService, sensorsService: SensorsService, gardenModel: mongoose.Model<Garden>, ledModel: mongoose.Model<Led>, fanModel: mongoose.Model<Fan>, waterpumpModel: mongoose.Model<Waterpump>);
+    constructor(socketService: SocketGatewayService, sensorsService: SensorsService, shareService: ShareService, gardenModel: mongoose.Model<Garden>, ledModel: mongoose.Model<Led>, fanModel: mongoose.Model<Fan>, waterpumpModel: mongoose.Model<Waterpump>);
     private feed;
     subscribe(client: any, topic: string): void;
     publish(client: any, topic: string, message: string): void;

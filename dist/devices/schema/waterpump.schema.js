@@ -15,7 +15,7 @@ const mongoose_2 = require("mongoose");
 let Waterpump = class Waterpump extends mongoose_2.Document {
 };
 __decorate([
-    (0, mongoose_1.Prop)({ type: String, default: 'off' }),
+    (0, mongoose_1.Prop)({ type: String, default: '0' }),
     __metadata("design:type", String)
 ], Waterpump.prototype, "status", void 0);
 __decorate([
