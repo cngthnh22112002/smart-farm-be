@@ -16,6 +16,7 @@ exports.BridgeController = void 0;
 const common_1 = require("@nestjs/common");
 const bridge_service_1 = require("./bridge.service");
 const passport_1 = require("@nestjs/passport");
+const gardenId_dto_1 = require("../garden/dto/gardenId.dto");
 let BridgeController = class BridgeController {
     constructor(bridgeService) {
         this.bridgeService = bridgeService;
@@ -28,11 +29,11 @@ let BridgeController = class BridgeController {
 };
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
-    (0, common_1.Get)(':id'),
+    (0, common_1.Get)(),
     __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
     __metadata("design:returntype", Promise)
 ], BridgeController.prototype, "handleData", null);
 __decorate([

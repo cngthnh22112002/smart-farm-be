@@ -21,17 +21,7 @@ export class MqttService {
   }
 
   public getClient(): mqtt.Client {
-      return this.client;
-  }
-
-  public subscribe(topic: string): void {
-      this.client.subscribe( this.feed + topic, (err) => {
-          if (err) {
-            console.log(`Error subscribing to : ${err}`);
-          } else {
-            console.log(`Subscribed to ${topic}`);
-          }
-      });
+    return this.client;
   }
 
   public init() {
@@ -51,5 +41,16 @@ export class MqttService {
       for(var topic of control) {
         this.subscribe('iot-control.' + topic);
       }
-  }    
+  }  
+  
+  public subscribe(topic: string): void {
+    this.client.subscribe( this.feed + topic, (err) => {
+        if (err) {
+          console.log(`Error subscribing to : ${err}`);
+        } else {
+          console.log(`Subscribed to ${topic}`);
+        }
+  });
+  }
+
 }

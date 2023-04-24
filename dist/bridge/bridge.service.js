@@ -19,9 +19,9 @@ let BridgeService = class BridgeService {
         this.mqttService = mqttService;
         this.mqttService.init();
     }
-    handleData(user, gardenId) {
+    async handleData(user, gardenId) {
         const client = this.mqttService.getClient();
-        this.adafruitService.handleData(client, user, gardenId);
+        await this.adafruitService.handleData(client, user, gardenId);
     }
 };
 BridgeService = __decorate([

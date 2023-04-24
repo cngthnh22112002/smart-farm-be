@@ -28,16 +28,6 @@ let MqttService = class MqttService {
     getClient() {
         return this.client;
     }
-    subscribe(topic) {
-        this.client.subscribe(this.feed + topic, (err) => {
-            if (err) {
-                console.log(`Error subscribing to : ${err}`);
-            }
-            else {
-                console.log(`Subscribed to ${topic}`);
-            }
-        });
-    }
     init() {
         this.client = mqtt.connect(this.connectUrl, this.option);
         this.client.on('connect', () => {
@@ -51,6 +41,16 @@ let MqttService = class MqttService {
         for (var topic of control) {
             this.subscribe('iot-control.' + topic);
         }
+    }
+    subscribe(topic) {
+        this.client.subscribe(this.feed + topic, (err) => {
+            if (err) {
+                console.log(`Error subscribing to : ${err}`);
+            }
+            else {
+                console.log(`Subscribed to ${topic}`);
+            }
+        });
     }
 };
 MqttService = __decorate([

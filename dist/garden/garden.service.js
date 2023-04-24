@@ -30,23 +30,24 @@ let GardenService = class GardenService {
         return user.save();
     }
     async createNewGarden(user, createGarden) {
-        const newGarden = await this.gardenModel.create({ userId: user._id });
+        const newGarden = await this.gardenModel.create({ userId: user._id, name: createGarden.name });
         user.gardens.push(newGarden._id);
+        const gardenId = { gardenId: newGarden._id };
         if (createGarden.hasOwnProperty('nums_led')) {
             for (var i = 0; i < createGarden.nums_led; i++) {
-                var led = await this.deviceService.createLed(user, newGarden._id);
+                var led = await this.deviceService.createLed(user, gardenId);
                 newGarden.leds.push(led._id);
             }
         }
         if (createGarden.hasOwnProperty('nums_fan')) {
             for (var i = 0; i < createGarden.nums_fan; i++) {
-                var fan = await this.deviceService.createFan(user, newGarden._id);
+                var fan = await this.deviceService.createFan(user, gardenId);
                 newGarden.fans.push(fan._id);
             }
         }
         if (createGarden.hasOwnProperty('nums_pump')) {
             for (var i = 0; i < createGarden.nums_pump; i++) {
-                var pump = await this.deviceService.createPump(user, newGarden._id);
+                var pump = await this.deviceService.createPump(user, gardenId);
                 newGarden.water_pumps.push(pump._id);
             }
         }
@@ -66,7 +67,8 @@ let GardenService = class GardenService {
         const garden = await this.gardenModel.findByIdAndUpdate(gardenId, updateGarden, { new: true }).exec();
         return garden.save();
     }
-    async getOneGarden(user, gardenId) {
+    async getOneGarden(user, garden_id) {
+        const gardenId = garden_id.gardenId;
         const isValidId = mongoose.isValidObjectId(gardenId);
         if (!isValidId) {
             throw new common_1.BadRequestException('Please enter correct id.');
@@ -83,20 +85,21 @@ let GardenService = class GardenService {
         return allGarden;
     }
     async deleteAllGarden(user) {
+        for (var i = 0; i < user.gardens.length; i++) {
+            await this.deviceService.deleteAllDeviceForAGarden(user, user.gardens[i]._id);
+        }
         user.gardens.splice(0, user.gardens.length);
         await this.gardenModel.deleteMany({ userId: user._id });
         return user.save();
     }
-    async deleteOneGarden(user, gardenId) {
-        const isValidId = mongoose.isValidObjectId(gardenId);
-        if (!isValidId) {
-            throw new common_1.BadRequestException('Please enter correct id.');
-        }
-        const deleteGarden = await this.gardenModel.findOneAndDelete({ _id: gardenId });
+    async deleteOneGarden(user, garden_id) {
+        const gardenId = garden_id.gardenId;
+        const deleteGarden = await this.gardenModel.findByIdAndDelete(gardenId);
         if (!deleteGarden) {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
-        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(deleteGarden._id)));
+        await this.deviceService.deleteAllDeviceForAGarden(user, deleteGarden._id);
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
         user.gardens.splice(gardenIndex, 1);
         return user.save();
     }

@@ -8,6 +8,6 @@ export declare class MqttService {
     private connectUrl;
     private option;
     getClient(): mqtt.Client;
-    subscribe(topic: string): void;
     init(): void;
+    subscribe(topic: string): void;
 }

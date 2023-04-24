@@ -13,7 +13,20 @@ exports.SocketGatewayService = void 0;
 const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
+const adafruit_config_1 = require("../adafruit/adafruit_config");
 let SocketGatewayService = class SocketGatewayService {
+    constructor(mqttService) {
+        this.mqttService = mqttService;
+        this.client = this.mqttService.getClient();
+        this.feed = process.env.ADA_USERNAME + "/feeds/";
+    }
+    publish(topic, message) {
+        this.client.publish(this.feed + topic, message);
+    }
+    setClient(client) {
+        console.log("Set client success !");
+        this.client = client;
+    }
     handleConnection(client) {
         console.log(`Client ${client.id} connected`);
         this.server.emit('message', 'Hello, client!');
@@ -31,10 +44,13 @@ let SocketGatewayService = class SocketGatewayService {
         this.server.emit('message', 'Hello from the server!');
     }
     handleLed(client, payload) {
+        this.publish('iot-control.led', payload.toString());
     }
     handleFan(client, payload) {
+        this.publish('iot-control.fan', payload.toString());
     }
     handleWaterPump(client, payload) {
+        this.publish('iot-control.pump', payload.toString());
     }
 };
 __decorate([
@@ -83,7 +99,8 @@ SocketGatewayService = __decorate([
             origin: '*',
         },
     }),
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [adafruit_config_1.MqttService])
 ], SocketGatewayService);
 exports.SocketGatewayService = SocketGatewayService;
 //# sourceMappingURL=socket_gateway.service.js.map

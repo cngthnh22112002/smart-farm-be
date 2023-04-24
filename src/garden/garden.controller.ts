@@ -1,10 +1,11 @@
-import { Controller, Delete, Request, Post, Param, UseGuards, Get, Body, Put } from '@nestjs/common';
+import { Controller, Delete, Request, Post, Param, UseGuards, Get, Body, Put, Query } from '@nestjs/common';
 import { GardenService } from './garden.service';
 import { User } from 'src/user/schema/user.schema';
 import { AuthGuard } from '@nestjs/passport';
 import { Garden } from './schema/garden.schema';
 import { UpdateGardenDto } from './dto/update-garden.dto';
 import { CreateGardenDto } from './dto/create-garden.dto';
+import { GardenIdDto } from './dto/gardenId.dto';
 
 
 @Controller('gardens')
@@ -13,18 +14,18 @@ export class GardenController {
 
     @UseGuards(AuthGuard())
     @Get(':id')
-    async getOneGarden(@Request() req: any, @Param('id') gardenId: string): Promise<Garden> {
+    async getOneGarden(@Request() req: any, @Param('id') gardenId: GardenIdDto): Promise<Garden> {
         return this.gardenService.getOneGarden(req.user, gardenId);
     } 
 
     @UseGuards(AuthGuard())
-    @Get()
+    @Get('all')
     async getAllGarden(@Request() req: any): Promise<Garden[]> {
         return this.gardenService.getAllGarden(req.user);
     } 
 
     @UseGuards(AuthGuard())
-    @Post()
+    @Post('blank')
     async createBlankNewGarden(@Request() req: any): Promise<User> {
         return this.gardenService.createBlankGarden(req.user);
     } 
@@ -42,14 +43,14 @@ export class GardenController {
     } 
 
     @UseGuards(AuthGuard())
-    @Delete()
+    @Delete('all')
     async deleteAllGarden(@Request() req: any): Promise<User> {
         return this.gardenService.deleteAllGarden(req.user);
     } 
 
     @UseGuards(AuthGuard())
-    @Delete(':id')
-    async deleteOneGarden(@Request() req: any, @Param('id') gardenId: string): Promise<User> {
+    @Delete()
+    async deleteOneGarden(@Request() req: any, @Query() gardenId: GardenIdDto): Promise<User> {
         return this.gardenService.deleteOneGarden(req.user, gardenId);
     } 
 }

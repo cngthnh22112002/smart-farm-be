@@ -27,13 +27,10 @@ let DevicesService = class DevicesService {
         this.waterpumpModel = waterpumpModel;
         this.gardenModel = gardenModel;
     }
-    async createLed(user, gardenId) {
+    async createLed(user, garden_id) {
+        const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
-        const isValidGarden = mongoose.isValidObjectId(gardenId);
-        if (!isValidGarden) {
-            throw new common_1.BadRequestException('Please enter correct id.');
-        }
-        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if (gardenIndex === -1) {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
@@ -41,13 +38,10 @@ let DevicesService = class DevicesService {
         garden.leds.push(led._id);
         return led;
     }
-    async createFan(user, gardenId) {
+    async createFan(user, garden_id) {
+        const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
-        const isValidGarden = mongoose.isValidObjectId(gardenId);
-        if (!isValidGarden) {
-            throw new common_1.BadRequestException('Please enter correct id.');
-        }
-        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if (gardenIndex === -1) {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
@@ -55,17 +49,14 @@ let DevicesService = class DevicesService {
         garden.fans.push(fan._id);
         return fan;
     }
-    async createPump(user, gardenId) {
+    async createPump(user, garden_id) {
+        const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
-        const isValidGarden = mongoose.isValidObjectId(gardenId);
-        if (!isValidGarden) {
-            throw new common_1.BadRequestException('Please enter correct id.');
-        }
-        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if (gardenIndex === -1) {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
-        const pump = await this.ledModel.create({ gardenId: gardenId });
+        const pump = await this.waterpumpModel.create({ gardenId: gardenId });
         garden.water_pumps.push(pump._id);
         return pump;
     }
@@ -127,6 +118,23 @@ let DevicesService = class DevicesService {
             throw new common_1.NotFoundException(`Pump with ID ${pumpId} not found`);
         }
         return pump;
+    }
+    async deleteAllDeviceForAGarden(user, gardenId) {
+        const garden = await this.gardenModel.findById(gardenId);
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        if (gardenIndex === -1) {
+            throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
+        await this.ledModel.deleteMany({ gardenId: gardenId });
+        await this.fanModel.deleteMany({ gardenId: gardenId });
+        await this.waterpumpModel.deleteMany({ gardenId: gardenId });
+        return garden;
+    }
+    async deleteAllDevice(user) {
+        await this.ledModel.deleteMany({});
+        await this.fanModel.deleteMany({});
+        await this.waterpumpModel.deleteMany({});
+        return user;
     }
 };
 DevicesService = __decorate([

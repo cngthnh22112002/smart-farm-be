@@ -18,6 +18,7 @@ const garden_service_1 = require("./garden.service");
 const passport_1 = require("@nestjs/passport");
 const update_garden_dto_1 = require("./dto/update-garden.dto");
 const create_garden_dto_1 = require("./dto/create-garden.dto");
+const gardenId_dto_1 = require("./dto/gardenId.dto");
 let GardenController = class GardenController {
     constructor(gardenService) {
         this.gardenService = gardenService;
@@ -50,12 +51,12 @@ __decorate([
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
     __metadata("design:returntype", Promise)
 ], GardenController.prototype, "getOneGarden", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
-    (0, common_1.Get)(),
+    (0, common_1.Get)('all'),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -63,7 +64,7 @@ __decorate([
 ], GardenController.prototype, "getAllGarden", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
-    (0, common_1.Post)(),
+    (0, common_1.Post)('blank'),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -89,7 +90,7 @@ __decorate([
 ], GardenController.prototype, "updateGarden", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
-    (0, common_1.Delete)(),
+    (0, common_1.Delete)('all'),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -97,11 +98,11 @@ __decorate([
 ], GardenController.prototype, "deleteAllGarden", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
-    (0, common_1.Delete)(':id'),
+    (0, common_1.Delete)(),
     __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
     __metadata("design:returntype", Promise)
 ], GardenController.prototype, "deleteOneGarden", null);
 GardenController = __decorate([

@@ -10,6 +10,7 @@ exports.SocketGatewayModule = void 0;
 const common_1 = require("@nestjs/common");
 const socket_gateway_service_1 = require("./socket_gateway.service");
 const auth_module_1 = require("../auth/auth.module");
+const adafruit_config_1 = require("../adafruit/adafruit_config");
 let SocketGatewayModule = class SocketGatewayModule {
 };
 SocketGatewayModule = __decorate([
@@ -17,7 +18,7 @@ SocketGatewayModule = __decorate([
         imports: [
             auth_module_1.AuthModule,
         ],
-        providers: [socket_gateway_service_1.SocketGatewayService],
+        providers: [socket_gateway_service_1.SocketGatewayService, adafruit_config_1.MqttService],
         exports: [socket_gateway_service_1.SocketGatewayService]
     })
 ], SocketGatewayModule);

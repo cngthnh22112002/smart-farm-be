@@ -23,6 +23,7 @@ BridgeModule = __decorate([
         ],
         providers: [adafruit_config_1.MqttService, bridge_service_1.BridgeService],
         controllers: [bridge_controller_1.BridgeController],
+        exports: [bridge_service_1.BridgeService]
     })
 ], BridgeModule);
 exports.BridgeModule = BridgeModule;

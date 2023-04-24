@@ -12,5 +12,6 @@ import { MqttService } from 'src/adafruit/adafruit_config';
   ],
   providers: [MqttService,BridgeService],
   controllers: [BridgeController],
+  exports: [BridgeService]
 })
 export class BridgeModule {}

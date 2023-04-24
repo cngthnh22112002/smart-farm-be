@@ -9,6 +9,8 @@ import { UpdateLedrDto } from './dto/update-led.dto';
 import { UpdateFanrDto } from './dto/update-fan.dto';
 import { UpdatePumprDto } from './dto/update-pump.dto';
 import { Led } from './schema/led.schema';
+import { Types } from 'mongoose';
+import { GardenIdDto } from 'src/garden/dto/gardenId.dto';
 
 @Injectable()
 export class DevicesService {
@@ -26,15 +28,10 @@ export class DevicesService {
     private gardenModel: mongoose.Model<Garden>,
 ) {}    
 
-    async createLed (user: User, gardenId: string): Promise<Led> {
+    async createLed (user: User, garden_id: GardenIdDto): Promise<Led> {
+        const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
-
-        const isValidGarden = mongoose.isValidObjectId(gardenId);
-        if (!isValidGarden) {
-          throw new BadRequestException('Please enter correct id.');
-        }
-  
-        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if(gardenIndex === -1) {
           throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
@@ -44,15 +41,10 @@ export class DevicesService {
         return led;
     }
 
-    async createFan (user: User, gardenId: string): Promise<Fan> {
+    async createFan (user: User, garden_id: GardenIdDto): Promise<Fan> {
+        const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
-
-        const isValidGarden = mongoose.isValidObjectId(gardenId);
-        if (!isValidGarden) {
-          throw new BadRequestException('Please enter correct id.');
-        }
-  
-        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if(gardenIndex === -1) {
           throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
@@ -62,20 +54,15 @@ export class DevicesService {
         return fan;
     }
 
-    async createPump (user: User, gardenId: string): Promise<Waterpump> {
+    async createPump (user: User, garden_id: GardenIdDto): Promise<Waterpump> {
+        const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
-
-        const isValidGarden = mongoose.isValidObjectId(gardenId);
-        if (!isValidGarden) {
-          throw new BadRequestException('Please enter correct id.');
-        }
-  
-        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if(gardenIndex === -1) {
           throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
 
-        const pump = await this.ledModel.create({gardenId: gardenId});
+        const pump = await this.waterpumpModel.create({gardenId: gardenId});
         garden.water_pumps.push(pump._id);
         return pump;
     }
@@ -145,5 +132,26 @@ export class DevicesService {
           throw new NotFoundException(`Pump with ID ${pumpId} not found`);
         }
         return pump;
+    }
+
+    async deleteAllDeviceForAGarden(user: User, gardenId: mongoose.Types.ObjectId): Promise<Garden> {
+        const garden = await this.gardenModel.findById(gardenId);
+        const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
+        if(gardenIndex === -1) {
+          throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
+
+        await this.ledModel.deleteMany({gardenId: gardenId});
+        await this.fanModel.deleteMany({gardenId: gardenId});
+        await this.waterpumpModel.deleteMany({gardenId: gardenId});
+    
+        return garden;
+    }
+
+    async deleteAllDevice(user: User): Promise<User> {
+      await this.ledModel.deleteMany({});
+      await this.fanModel.deleteMany({});
+      await this.waterpumpModel.deleteMany({});
+      return user;
     }
 }

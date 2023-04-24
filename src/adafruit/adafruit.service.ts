@@ -1,8 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { SocketGatewayService } from 'src/socket_gateway/socket_gateway.service';
 import { User } from 'src/user/schema/user.schema';
 import { SensorsService } from 'src/sensors/sensors.service';
+import { GardenIdDto } from 'src/garden/dto/gardenId.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Garden } from 'src/garden/schema/garden.schema';
 import mongoose from 'mongoose';
+import { Led } from 'src/devices/schema/led.schema';
+import { Fan } from 'src/devices/schema/fan.schema';
+import { Waterpump } from 'src/devices/schema/waterpump.schema';
 
 
 @Injectable()
@@ -10,24 +16,22 @@ export class AdafruitService {
     constructor(
         private socketService: SocketGatewayService,
         private sensorsService: SensorsService,
+
+        @InjectModel(Garden.name)
+        private gardenModel: mongoose.Model<Garden>,
+
+        @InjectModel(Led.name)
+        private ledModel: mongoose.Model<Led>,
+    
+        @InjectModel(Fan.name)
+        private fanModel: mongoose.Model<Fan>,
+    
+        @InjectModel(Waterpump.name)
+        private waterpumpModel: mongoose.Model<Waterpump>,
     )  {}
     
 
     private feed = process.env.ADA_USERNAME + "/feeds/";
-    private led = {
-        ledId: '',
-        status: ''
-    }
-
-    private fan = {
-        fanId: '',
-        status: ''
-    }
-
-    private pump = {
-        pumpId: '',
-        status: ''
-    }
 
     public subscribe(client: any, topic: string): void {
         client.subscribe( this.feed + topic, (err) => {
@@ -38,31 +42,59 @@ export class AdafruitService {
             }
         });
     }
-
-
-    public public(client: any, topic: string, message: string): void {
-        client.on('connect', () => {    
-            client.publish(this.feed + topic, message, (err: any) => {
-                if (err) {
-                    console.error('failed to publish message:', err);
-                  } else {
-                    console.log('message published successfully');
-                }
-            })
-        }); 
+    
+    public publish(client:any, topic: string, message: string): void {
+        client.publish(this.feed + topic, message, (err: any) => {
+            if (err) {
+                console.error('failed to publish message:', err);
+            }
+        });
     }
 
 
-    public handleData(client: any, user : User, gardenId: string): void {
-        const isValidId = mongoose.isValidObjectId(gardenId);
-        if (!isValidId) {
-          throw new BadRequestException('Please enter correct id.');
+    public async handleData(client: any, user : User, garden_id: GardenIdDto) {
+        this.socketService.setClient(client);
+
+        const gardenId = garden_id.gardenId;
+        const garden = await this.gardenModel.findById(gardenId);
+
+        if(!garden) {
+            throw new NotFoundException(`Garden with ID ${gardenId} not found `);
         }
 
         const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
         if(gardenIndex === -1) {
           throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }  
+
+        if(!garden.leds) {
+            throw new NotFoundException(`Led with Garden ID ${gardenId} not found `);
+        }
+        else if(!garden.fans) {
+            throw new NotFoundException(`Fan with Garden ID ${gardenId} not found `);
+        }
+        else if(!garden.water_pumps) {
+            throw new NotFoundException(`Water-pump with Garden ID ${gardenId} not found `);
+        }
+
+        const led = await this.ledModel.findById(garden.leds[0]._id);
+        const fan = await this.fanModel.findById(garden.fans[0]._id);
+        const pump = await this.waterpumpModel.findById(garden.water_pumps[0]._id);
+
+        if(!led) {
+            throw new NotFoundException(`Led with Garden ID ${gardenId} not found `);
+        }
+        else if(!fan) {
+            throw new NotFoundException(`Fan with Garden ID ${gardenId} not found `);
+        }
+        else if(!pump) {
+            throw new NotFoundException(`Water-pump with Garden ID ${gardenId} not found `);
+        }
+
+        this.socketService.server.emit('led', led.status) 
+        this.socketService.server.emit('fan', fan.status) 
+        this.socketService.server.emit('pump', pump.status) 
+
 
         client.on('message', async (topic: string, message: Buffer) => {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
@@ -131,27 +163,20 @@ export class AdafruitService {
 
             // Handle data from fan
             if(topic == this.feed + 'iot-control.fan') {
-                this.socketService.server.emit('fan', message.toString())      
+                this.socketService.server.emit('fan', message.toString());
+                await fan.updateOne({status: message.toString()});  
             }
 
             // Handle data from led
             if(topic == this.feed + 'iot-control.led') {
-                this.socketService.server.emit('led', message.toString())     
+                this.socketService.server.emit('led', message.toString());
+                await led.updateOne({status: message.toString()});      
             }
 
             // Handle data from fan
             if(topic == this.feed + 'iot-control.pump') {
-                this.socketService.server.emit('pump', message.toString())     
-            }
-
-            // Handle data from water-pumps
-            if(topic == this.feed + 'water-pumps') {
-                this.socketService.server.emit('water-pumps', message.toString())
-            }
-
-            // Handle data from light
-            if(topic == this.feed + 'light') {
-                this.socketService.server.emit('light', message.toString())
+                this.socketService.server.emit('pump', message.toString());
+                await pump.updateOne({status: message.toString()});  
             }
         });
     }

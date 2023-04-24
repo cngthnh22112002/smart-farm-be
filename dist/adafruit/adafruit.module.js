@@ -13,13 +13,22 @@ const sensors_module_1 = require("../sensors/sensors.module");
 const socket_gateway_service_1 = require("../socket_gateway/socket_gateway.service");
 const adafruit_config_1 = require("./adafruit_config");
 const devices_module_1 = require("../devices/devices.module");
+const mongoose_1 = require("@nestjs/mongoose");
+const led_schema_1 = require("../devices/schema/led.schema");
+const fan_schema_1 = require("../devices/schema/fan.schema");
+const waterpump_schema_1 = require("../devices/schema/waterpump.schema");
+const garden_schema_1 = require("../garden/schema/garden.schema");
 let AdafruitModule = class AdafruitModule {
 };
 AdafruitModule = __decorate([
     (0, common_1.Module)({
         imports: [
             sensors_module_1.SensorsModule,
-            devices_module_1.DevicesModule
+            devices_module_1.DevicesModule,
+            mongoose_1.MongooseModule.forFeature([{ name: led_schema_1.Led.name, schema: led_schema_1.LedSchema }]),
+            mongoose_1.MongooseModule.forFeature([{ name: fan_schema_1.Fan.name, schema: fan_schema_1.FanSchema }]),
+            mongoose_1.MongooseModule.forFeature([{ name: waterpump_schema_1.Waterpump.name, schema: waterpump_schema_1.WaterpumpSchema }]),
+            mongoose_1.MongooseModule.forFeature([{ name: garden_schema_1.Garden.name, schema: garden_schema_1.GardenSchema }]),
         ],
         providers: [adafruit_config_1.MqttService, socket_gateway_service_1.SocketGatewayService, adafruit_service_1.AdafruitService],
         exports: [adafruit_service_1.AdafruitService]

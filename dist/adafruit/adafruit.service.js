@@ -8,29 +8,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdafruitService = void 0;
 const common_1 = require("@nestjs/common");
 const socket_gateway_service_1 = require("../socket_gateway/socket_gateway.service");
 const sensors_service_1 = require("../sensors/sensors.service");
-const mongoose_1 = require("mongoose");
+const mongoose_1 = require("@nestjs/mongoose");
+const garden_schema_1 = require("../garden/schema/garden.schema");
+const mongoose_2 = require("mongoose");
+const led_schema_1 = require("../devices/schema/led.schema");
+const fan_schema_1 = require("../devices/schema/fan.schema");
+const waterpump_schema_1 = require("../devices/schema/waterpump.schema");
 let AdafruitService = class AdafruitService {
-    constructor(socketService, sensorsService) {
+    constructor(socketService, sensorsService, gardenModel, ledModel, fanModel, waterpumpModel) {
         this.socketService = socketService;
         this.sensorsService = sensorsService;
+        this.gardenModel = gardenModel;
+        this.ledModel = ledModel;
+        this.fanModel = fanModel;
+        this.waterpumpModel = waterpumpModel;
         this.feed = process.env.ADA_USERNAME + "/feeds/";
-        this.led = {
-            ledId: '',
-            status: ''
-        };
-        this.fan = {
-            fanId: '',
-            status: ''
-        };
-        this.pump = {
-            pumpId: '',
-            status: ''
-        };
     }
     subscribe(client, topic) {
         client.subscribe(this.feed + topic, (err) => {
@@ -54,15 +54,41 @@ let AdafruitService = class AdafruitService {
             });
         });
     }
-    handleData(client, user, gardenId) {
-        const isValidId = mongoose_1.default.isValidObjectId(gardenId);
-        if (!isValidId) {
-            throw new common_1.BadRequestException('Please enter correct id.');
+    async handleData(client, user, garden_id) {
+        this.socketService.setClient(client);
+        const gardenId = garden_id.gardenId;
+        const garden = await this.gardenModel.findById(gardenId);
+        if (!garden) {
+            throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found `);
         }
         const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
         if (gardenIndex === -1) {
             throw new common_1.NotFoundException(`Garden with ID ${gardenId} not found for user`);
         }
+        if (!garden.leds) {
+            throw new common_1.NotFoundException(`Led with Garden ID ${gardenId} not found `);
+        }
+        else if (!garden.fans) {
+            throw new common_1.NotFoundException(`Fan with Garden ID ${gardenId} not found `);
+        }
+        else if (!garden.water_pumps) {
+            throw new common_1.NotFoundException(`Water-pump with Garden ID ${gardenId} not found `);
+        }
+        const led = await this.ledModel.findById(garden.leds[0]._id);
+        const fan = await this.fanModel.findById(garden.fans[0]._id);
+        const pump = await this.waterpumpModel.findById(garden.water_pumps[0]._id);
+        if (!led) {
+            throw new common_1.NotFoundException(`Led with Garden ID ${gardenId} not found `);
+        }
+        else if (!fan) {
+            throw new common_1.NotFoundException(`Fan with Garden ID ${gardenId} not found `);
+        }
+        else if (!pump) {
+            throw new common_1.NotFoundException(`Water-pump with Garden ID ${gardenId} not found `);
+        }
+        this.socketService.server.emit('led', led.status);
+        this.socketService.server.emit('fan', fan.status);
+        this.socketService.server.emit('pump', pump.status);
         client.on('message', async (topic, message) => {
             console.log(`Received message on topic ${topic}: ${message.toString()}`);
             if (topic == this.feed + 'iot-sensor.lux') {
@@ -120,26 +146,27 @@ let AdafruitService = class AdafruitService {
             }
             if (topic == this.feed + 'iot-control.fan') {
                 this.socketService.server.emit('fan', message.toString());
+                await fan.updateOne({ status: message.toString() });
             }
             if (topic == this.feed + 'iot-control.led') {
                 this.socketService.server.emit('led', message.toString());
+                await led.updateOne({ status: message.toString() });
             }
             if (topic == this.feed + 'iot-control.pump') {
                 this.socketService.server.emit('pump', message.toString());
-            }
-            if (topic == this.feed + 'water-pumps') {
-                this.socketService.server.emit('water-pumps', message.toString());
-            }
-            if (topic == this.feed + 'light') {
-                this.socketService.server.emit('light', message.toString());
+                await pump.updateOne({ status: message.toString() });
             }
         });
     }
 };
 AdafruitService = __decorate([
     (0, common_1.Injectable)(),
+    __param(2, (0, mongoose_1.InjectModel)(garden_schema_1.Garden.name)),
+    __param(3, (0, mongoose_1.InjectModel)(led_schema_1.Led.name)),
+    __param(4, (0, mongoose_1.InjectModel)(fan_schema_1.Fan.name)),
+    __param(5, (0, mongoose_1.InjectModel)(waterpump_schema_1.Waterpump.name)),
     __metadata("design:paramtypes", [socket_gateway_service_1.SocketGatewayService,
-        sensors_service_1.SensorsService])
+        sensors_service_1.SensorsService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AdafruitService);
 exports.AdafruitService = AdafruitService;
 //# sourceMappingURL=adafruit.service.js.map

@@ -16,6 +16,7 @@ exports.DevicesController = void 0;
 const common_1 = require("@nestjs/common");
 const devices_service_1 = require("./devices.service");
 const passport_1 = require("@nestjs/passport");
+const gardenId_dto_1 = require("../garden/dto/gardenId.dto");
 let DevicesController = class DevicesController {
     constructor(deviceService) {
         this.deviceService = deviceService;
@@ -36,7 +37,7 @@ __decorate([
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
     __metadata("design:returntype", Promise)
 ], DevicesController.prototype, "createLed", null);
 __decorate([
@@ -45,7 +46,7 @@ __decorate([
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
     __metadata("design:returntype", Promise)
 ], DevicesController.prototype, "createFan", null);
 __decorate([
@@ -54,7 +55,7 @@ __decorate([
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
     __metadata("design:returntype", Promise)
 ], DevicesController.prototype, "createPump", null);
 DevicesController = __decorate([
