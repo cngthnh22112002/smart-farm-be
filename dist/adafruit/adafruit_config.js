@@ -13,7 +13,6 @@ let MqttService = class MqttService {
     constructor() {
         this.host = "io.adafruit.com";
         this.ada_port = "1883";
-        this.clientId = "smartFarm_backend";
         this.feed = process.env.ADA_USERNAME + "/feeds/";
         this.connectUrl = `mqtt://${this.host}:${this.ada_port}`;
         this.option = {
@@ -23,6 +22,9 @@ let MqttService = class MqttService {
     }
     getClient() {
         return this.client;
+    }
+    setClient(value) {
+        this.client = value;
     }
     init() {
         this.client = mqtt.connect(this.connectUrl, this.option);

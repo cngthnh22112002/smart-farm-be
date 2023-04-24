@@ -13,4 +13,6 @@ export declare class BridgeService {
     constructor(adafruitService: AdafruitService, mqttService: MqttService, shareService: ShareService, deviceService: DevicesService);
     handleData(user: User, gardenId: GardenIdDto): Promise<void>;
     connectDevice(user: User, allId: AllIdDto): Promise<void>;
+    connect(user: User): void;
+    disconnect(user: User): void;
 }

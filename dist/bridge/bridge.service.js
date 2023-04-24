@@ -24,7 +24,11 @@ let BridgeService = class BridgeService {
         this.mqttService.init();
     }
     async handleData(user, gardenId) {
-        const client = this.mqttService.getClient();
+        var client = this.mqttService.getClient();
+        if (!client) {
+            this.mqttService.init();
+            client = this.mqttService.getClient();
+        }
         await this.adafruitService.handleData(client, user, gardenId);
     }
     async connectDevice(user, allId) {
@@ -35,6 +39,14 @@ let BridgeService = class BridgeService {
         this.shareService.setFanStatus(fanStatus);
         this.shareService.setLedStatus(ledStatus);
         this.shareService.setPumpStatus(pumpStatus);
+    }
+    connect(user) {
+        this.mqttService.init();
+    }
+    disconnect(user) {
+        const client = this.mqttService.getClient();
+        this.adafruitService.disconnect(client);
+        this.mqttService.setClient(undefined);
     }
 };
 BridgeService = __decorate([

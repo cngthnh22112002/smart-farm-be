@@ -25,13 +25,19 @@ let BridgeController = class BridgeController {
     async handleData(req, gardenId) {
         await this.bridgeService.handleData(req.user, gardenId);
     }
+    async disconnect(req) {
+        this.bridgeService.disconnect(req.user);
+    }
+    async connect(req) {
+        this.bridgeService.connect(req.user);
+    }
     async connectDevices(req, allId) {
         await this.bridgeService.connectDevice(req.user, allId);
     }
 };
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
-    (0, common_1.Get)(),
+    (0, common_1.Get)('data'),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
@@ -39,6 +45,23 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BridgeController.prototype, "handleData", null);
 __decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    (0, common_1.Get)('disconnect'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], BridgeController.prototype, "disconnect", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    (0, common_1.Get)('connect'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], BridgeController.prototype, "connect", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Body)()),

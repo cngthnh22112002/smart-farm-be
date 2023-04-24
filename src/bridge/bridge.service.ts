@@ -15,14 +15,20 @@ export class BridgeService {
         private mqttService: MqttService,
         private shareService: ShareService,
         private deviceService: DevicesService
-    ) {
+    ) { 
         this.mqttService.init();
     }
 
     async handleData(user: User, gardenId: GardenIdDto) {
-        const client = this.mqttService.getClient();
+        var client = this.mqttService.getClient();
+        if(!client) {
+            this.mqttService.init();
+            client = this.mqttService.getClient();
+        }
         await this.adafruitService.handleData(client, user, gardenId);
     }
+
+    
 
     async connectDevice(user: User, allId: AllIdDto) {
         this.shareService.setId(allId);
@@ -34,4 +40,15 @@ export class BridgeService {
         this.shareService.setLedStatus(ledStatus);
         this.shareService.setPumpStatus(pumpStatus);
     }
+
+    connect(user: User) {
+        this.mqttService.init();
+    }
+
+    disconnect(user: User) {
+        const client = this.mqttService.getClient();
+        this.adafruitService.disconnect(client);
+        this.mqttService.setClient(undefined);
+    }
+
 }

@@ -19,6 +19,7 @@ export declare class AdafruitService {
     constructor(socketService: SocketGatewayService, sensorsService: SensorsService, shareService: ShareService, gardenModel: mongoose.Model<Garden>, ledModel: mongoose.Model<Led>, fanModel: mongoose.Model<Fan>, waterpumpModel: mongoose.Model<Waterpump>);
     private feed;
     subscribe(client: any, topic: string): void;
+    disconnect(client: any): void;
     publish(client: any, topic: string, message: string): void;
     handleData(client: any, user: User, garden_id: GardenIdDto): Promise<void>;
 }

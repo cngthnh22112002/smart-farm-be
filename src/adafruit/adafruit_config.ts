@@ -7,7 +7,6 @@ export class MqttService {
 
   private host = "io.adafruit.com";
   private ada_port = "1883";
-  private clientId = "smartFarm_backend";
   private feed = process.env.ADA_USERNAME + "/feeds/";
 
   private connectUrl = `mqtt://${this.host}:${this.ada_port}`;
@@ -18,6 +17,10 @@ export class MqttService {
 
   public getClient(): mqtt.Client {
     return this.client;
+  }
+
+  public setClient(value: any): void {
+    this.client = value;
   }
 
   public init() {

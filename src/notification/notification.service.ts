@@ -15,7 +15,6 @@ export class NotificationService {
 
     async createNotification(user: User, notification: CreateNotificationDto): Promise<Notification> {
         const newNoti = {...notification, userId : user._id}
-        console.log(newNoti);
         const noti = await this.notificationModel.create(newNoti);
         user.notifications.push(noti._id);
         user.save();
@@ -37,7 +36,6 @@ export class NotificationService {
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999); // set the time to 23:59:59.999
 
-        console.log(user._id);
       
         const todayNotifications = await this.notificationModel.aggregate([
           {

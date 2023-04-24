@@ -44,6 +44,9 @@ let AdafruitService = class AdafruitService {
             }
         });
     }
+    disconnect(client) {
+        client.end();
+    }
     publish(client, topic, message) {
         client.publish(this.feed + topic, message, (err) => {
             if (err) {

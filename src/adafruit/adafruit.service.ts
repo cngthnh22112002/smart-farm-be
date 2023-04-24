@@ -44,6 +44,10 @@ export class AdafruitService {
             }
         });
     }
+
+    public disconnect(client: any): void {
+        client.end();
+    }
     
     public publish(client:any, topic: string, message: string): void {
         client.publish(this.feed + topic, message, (err: any) => {

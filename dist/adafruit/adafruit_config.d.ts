@@ -3,11 +3,11 @@ export declare class MqttService {
     private client;
     private host;
     private ada_port;
-    private clientId;
     private feed;
     private connectUrl;
     private option;
     getClient(): mqtt.Client;
+    setClient(value: any): void;
     init(): void;
     subscribe(topic: string): void;
 }
