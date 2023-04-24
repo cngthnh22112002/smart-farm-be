@@ -8,12 +8,18 @@ import { UpdateFanrDto } from './dto/update-fan.dto';
 import { UpdatePumprDto } from './dto/update-pump.dto';
 import { Led } from './schema/led.schema';
 import { GardenIdDto } from 'src/garden/dto/gardenId.dto';
+import { LedIdDto } from './dto/ledId.dto';
+import { FanIdDto } from './dto/fanId.dto';
+import { PumpIdDto } from './dto/pumpId.dto';
 export declare class DevicesService {
     private ledModel;
     private fanModel;
     private waterpumpModel;
     private gardenModel;
     constructor(ledModel: mongoose.Model<Led>, fanModel: mongoose.Model<Fan>, waterpumpModel: mongoose.Model<Waterpump>, gardenModel: mongoose.Model<Garden>);
+    getLed(device_id: LedIdDto): Promise<Led>;
+    getFan(device_id: FanIdDto): Promise<Fan>;
+    getPump(device_id: PumpIdDto): Promise<Waterpump>;
     createLed(user: User, garden_id: GardenIdDto): Promise<Led>;
     createFan(user: User, garden_id: GardenIdDto): Promise<Fan>;
     createPump(user: User, garden_id: GardenIdDto): Promise<Waterpump>;

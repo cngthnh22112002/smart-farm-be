@@ -17,14 +17,16 @@ const common_1 = require("@nestjs/common");
 const bridge_service_1 = require("./bridge.service");
 const passport_1 = require("@nestjs/passport");
 const gardenId_dto_1 = require("../garden/dto/gardenId.dto");
+const allId_dto_1 = require("../share/dto/allId.dto");
 let BridgeController = class BridgeController {
     constructor(bridgeService) {
         this.bridgeService = bridgeService;
     }
     async handleData(req, gardenId) {
-        this.bridgeService.handleData(req.user, gardenId);
+        await this.bridgeService.handleData(req.user, gardenId);
     }
-    subcribe(topic) {
+    async connectDevices(req, allId) {
+        await this.bridgeService.connectDevice(req.user, allId);
     }
 };
 __decorate([
@@ -38,11 +40,12 @@ __decorate([
 ], BridgeController.prototype, "handleData", null);
 __decorate([
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)('topic')),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], BridgeController.prototype, "subcribe", null);
+    __metadata("design:paramtypes", [Object, allId_dto_1.AllIdDto]),
+    __metadata("design:returntype", Promise)
+], BridgeController.prototype, "connectDevices", null);
 BridgeController = __decorate([
     (0, common_1.Controller)('bridge'),
     __metadata("design:paramtypes", [bridge_service_1.BridgeService])

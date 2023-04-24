@@ -13,21 +13,36 @@ exports.BridgeService = void 0;
 const common_1 = require("@nestjs/common");
 const adafruit_service_1 = require("../adafruit/adafruit.service");
 const adafruit_config_1 = require("../adafruit/adafruit_config");
+const devices_service_1 = require("../devices/devices.service");
+const share_service_1 = require("../share/share.service");
 let BridgeService = class BridgeService {
-    constructor(adafruitService, mqttService) {
+    constructor(adafruitService, mqttService, shareService, deviceService) {
         this.adafruitService = adafruitService;
         this.mqttService = mqttService;
+        this.shareService = shareService;
+        this.deviceService = deviceService;
         this.mqttService.init();
     }
     async handleData(user, gardenId) {
         const client = this.mqttService.getClient();
         await this.adafruitService.handleData(client, user, gardenId);
     }
+    async connectDevice(user, allId) {
+        this.shareService.setId(allId);
+        const ledStatus = (await this.deviceService.getLed({ ledId: allId.ledId })).status;
+        const fanStatus = (await this.deviceService.getFan({ fanId: allId.fanId })).status;
+        const pumpStatus = (await this.deviceService.getPump({ pumpId: allId.pumpId })).status;
+        this.shareService.setFanStatus(fanStatus);
+        this.shareService.setLedStatus(ledStatus);
+        this.shareService.setPumpStatus(pumpStatus);
+    }
 };
 BridgeService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [adafruit_service_1.AdafruitService,
-        adafruit_config_1.MqttService])
+        adafruit_config_1.MqttService,
+        share_service_1.ShareService,
+        devices_service_1.DevicesService])
 ], BridgeService);
 exports.BridgeService = BridgeService;
 //# sourceMappingURL=bridge.service.js.map

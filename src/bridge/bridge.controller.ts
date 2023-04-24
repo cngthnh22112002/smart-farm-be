@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post,Query,Request, UseGuards } from '@ne
 import { BridgeService } from './bridge.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GardenIdDto } from 'src/garden/dto/gardenId.dto';
+import { AllIdDto } from 'src/share/dto/allId.dto';
 
 @Controller('bridge')
 export class BridgeController {
@@ -13,11 +14,11 @@ export class BridgeController {
     @UseGuards(AuthGuard())
     @Get()
     async handleData (@Request() req: any, @Query() gardenId: GardenIdDto) {
-        this.bridgeService.handleData(req.user, gardenId);
+        await this.bridgeService.handleData(req.user, gardenId);
     }
 
     @Post()
-    subcribe(@Body('topic') topic: string) {
-        //this.bridgeService.subcribe(topic);
+    async connectDevices(@Request() req:any, @Body() allId: AllIdDto) {
+        await this.bridgeService.connectDevice(req.user, allId);
     }
 }

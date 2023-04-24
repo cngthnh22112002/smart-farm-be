@@ -9,6 +9,7 @@ import { Led, LedSchema } from 'src/devices/schema/led.schema';
 import { Fan, FanSchema } from 'src/devices/schema/fan.schema';
 import { Waterpump, WaterpumpSchema } from 'src/devices/schema/waterpump.schema';
 import { Garden, GardenSchema } from 'src/garden/schema/garden.schema';
+import { ShareService } from 'src/share/share.service';
 
 @Module({
     imports: [
@@ -19,7 +20,7 @@ import { Garden, GardenSchema } from 'src/garden/schema/garden.schema';
         MongooseModule.forFeature([{ name: Waterpump.name, schema: WaterpumpSchema }]),
         MongooseModule.forFeature([{ name: Garden.name, schema: GardenSchema }]),
     ],
-    providers: [MqttService, SocketGatewayService, AdafruitService],
+    providers: [MqttService, SocketGatewayService, AdafruitService, ShareService],
     exports:[AdafruitService]
 })
 export class AdafruitModule {}

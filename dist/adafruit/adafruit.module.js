@@ -18,6 +18,7 @@ const led_schema_1 = require("../devices/schema/led.schema");
 const fan_schema_1 = require("../devices/schema/fan.schema");
 const waterpump_schema_1 = require("../devices/schema/waterpump.schema");
 const garden_schema_1 = require("../garden/schema/garden.schema");
+const share_service_1 = require("../share/share.service");
 let AdafruitModule = class AdafruitModule {
 };
 AdafruitModule = __decorate([
@@ -30,7 +31,7 @@ AdafruitModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: waterpump_schema_1.Waterpump.name, schema: waterpump_schema_1.WaterpumpSchema }]),
             mongoose_1.MongooseModule.forFeature([{ name: garden_schema_1.Garden.name, schema: garden_schema_1.GardenSchema }]),
         ],
-        providers: [adafruit_config_1.MqttService, socket_gateway_service_1.SocketGatewayService, adafruit_service_1.AdafruitService],
+        providers: [adafruit_config_1.MqttService, socket_gateway_service_1.SocketGatewayService, adafruit_service_1.AdafruitService, share_service_1.ShareService],
         exports: [adafruit_service_1.AdafruitService]
     })
 ], AdafruitModule);

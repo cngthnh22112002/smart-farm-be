@@ -20,6 +20,7 @@ const garden_module_1 = require("./garden/garden.module");
 const notification_module_1 = require("./notification/notification.module");
 const dictionary_module_1 = require("./dictionary/dictionary.module");
 const devices_module_1 = require("./devices/devices.module");
+const share_module_1 = require("./share/share.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -38,6 +39,7 @@ AppModule = __decorate([
             notification_module_1.NotificationModule,
             dictionary_module_1.DictionaryModule,
             devices_module_1.DevicesModule,
+            share_module_1.ShareModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

@@ -22,10 +22,10 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
 export declare class Notification extends Document {
-    type: string;
-    content: string;
+    title: string;
+    message: string;
     isRead: boolean;
     createdAt: Date;
     userId: Types.ObjectId;

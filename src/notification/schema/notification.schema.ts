@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
 
 @Schema()
 export class Notification extends Document {
   @Prop({ type: String, required: true })
-  type: string;
+  title: string;
 
   @Prop({ type: String, required: true })
-  content: string;
+  message: string;
 
   @Prop({ type: Boolean, default: true })
   isRead: boolean;

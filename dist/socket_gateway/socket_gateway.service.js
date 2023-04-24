@@ -14,14 +14,20 @@ const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 const adafruit_config_1 = require("../adafruit/adafruit_config");
+const share_service_1 = require("../share/share.service");
 let SocketGatewayService = class SocketGatewayService {
-    constructor(mqttService) {
+    constructor(mqttService, shareService) {
         this.mqttService = mqttService;
+        this.shareService = shareService;
         this.client = this.mqttService.getClient();
         this.feed = process.env.ADA_USERNAME + "/feeds/";
     }
     publish(topic, message) {
-        this.client.publish(this.feed + topic, message);
+        this.client.publish(this.feed + topic, message, (err) => {
+            if (err) {
+                console.error('failed to publish message:', err);
+            }
+        });
     }
     setClient(client) {
         console.log("Set client success !");
@@ -29,6 +35,12 @@ let SocketGatewayService = class SocketGatewayService {
     }
     handleConnection(client) {
         console.log(`Client ${client.id} connected`);
+        const ledStatus = this.shareService.getLedStatus();
+        const fanStatus = this.shareService.getFanStatus();
+        const pumpStatus = this.shareService.getPumpStatus();
+        this.server.emit('fan', fanStatus);
+        this.server.emit('pump', pumpStatus);
+        this.server.emit('led', ledStatus);
         this.server.emit('message', 'Hello, client!');
     }
     handleMessage(client, payload) {
@@ -100,7 +112,8 @@ SocketGatewayService = __decorate([
         },
     }),
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [adafruit_config_1.MqttService])
+    __metadata("design:paramtypes", [adafruit_config_1.MqttService,
+        share_service_1.ShareService])
 ], SocketGatewayService);
 exports.SocketGatewayService = SocketGatewayService;
 //# sourceMappingURL=socket_gateway.service.js.map

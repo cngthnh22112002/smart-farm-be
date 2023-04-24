@@ -12,16 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationSchema = exports.Notification = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-let Notification = class Notification extends Document {
+let Notification = class Notification extends mongoose_2.Document {
 };
 __decorate([
     (0, mongoose_1.Prop)({ type: String, required: true }),
     __metadata("design:type", String)
-], Notification.prototype, "type", void 0);
+], Notification.prototype, "title", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: String, required: true }),
     __metadata("design:type", String)
-], Notification.prototype, "content", void 0);
+], Notification.prototype, "message", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: Boolean, default: true }),
     __metadata("design:type", Boolean)

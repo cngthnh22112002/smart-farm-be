@@ -17,6 +17,9 @@ const common_1 = require("@nestjs/common");
 const devices_service_1 = require("./devices.service");
 const passport_1 = require("@nestjs/passport");
 const gardenId_dto_1 = require("../garden/dto/gardenId.dto");
+const ledId_dto_1 = require("./dto/ledId.dto");
+const fanId_dto_1 = require("./dto/fanId.dto");
+const pumpId_dto_1 = require("./dto/pumpId.dto");
 let DevicesController = class DevicesController {
     constructor(deviceService) {
         this.deviceService = deviceService;
@@ -27,8 +30,14 @@ let DevicesController = class DevicesController {
     async createFan(req, gardenId) {
         return this.deviceService.createFan(req.user, gardenId);
     }
-    async createPump(req, gardenId) {
-        return this.deviceService.createPump(req.user, gardenId);
+    async getLed(req, deviceId) {
+        return this.deviceService.getLed(deviceId);
+    }
+    async getFan(req, deviceId) {
+        return this.deviceService.getFan(deviceId);
+    }
+    async getPump(req, deviceId) {
+        return this.deviceService.getPump(deviceId);
     }
 };
 __decorate([
@@ -51,13 +60,31 @@ __decorate([
 ], DevicesController.prototype, "createFan", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
-    (0, common_1.Post)('pump'),
+    (0, common_1.Get)('led'),
     __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
+    __metadata("design:paramtypes", [Object, ledId_dto_1.LedIdDto]),
     __metadata("design:returntype", Promise)
-], DevicesController.prototype, "createPump", null);
+], DevicesController.prototype, "getLed", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    (0, common_1.Get)('fan'),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, fanId_dto_1.FanIdDto]),
+    __metadata("design:returntype", Promise)
+], DevicesController.prototype, "getFan", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    (0, common_1.Get)('pump'),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, pumpId_dto_1.PumpIdDto]),
+    __metadata("design:returntype", Promise)
+], DevicesController.prototype, "getPump", null);
 DevicesController = __decorate([
     (0, common_1.Controller)('devices'),
     __metadata("design:paramtypes", [devices_service_1.DevicesService])

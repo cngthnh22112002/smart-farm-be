@@ -42,16 +42,11 @@ let AdafruitService = class AdafruitService {
             }
         });
     }
-    public(client, topic, message) {
-        client.on('connect', () => {
-            client.publish(this.feed + topic, message, (err) => {
-                if (err) {
-                    console.error('failed to publish message:', err);
-                }
-                else {
-                    console.log('message published successfully');
-                }
-            });
+    publish(client, topic, message) {
+        client.publish(this.feed + topic, message, (err) => {
+            if (err) {
+                console.error('failed to publish message:', err);
+            }
         });
     }
     async handleData(client, user, garden_id) {

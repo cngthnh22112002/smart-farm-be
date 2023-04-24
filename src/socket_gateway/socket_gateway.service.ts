@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { MqttService } from 'src/adafruit/adafruit_config';
-import * as mqtt from 'mqtt';
-import { BridgeService } from 'src/bridge/bridge.service';
+import { ShareService } from 'src/share/share.service';
+import { DevicesService } from 'src/devices/devices.service';
 
 
 @WebSocketGateway({
@@ -15,7 +15,8 @@ import { BridgeService } from 'src/bridge/bridge.service';
 @Injectable()
 export class SocketGatewayService {
   constructor(
-    private mqttService: MqttService
+    private mqttService: MqttService,
+    private shareService: ShareService,
   ) {}
 
   @WebSocketServer() server: Server;
@@ -40,6 +41,13 @@ export class SocketGatewayService {
 
   handleConnection(client: Socket) {
     console.log(`Client ${client.id} connected`);
+    const ledStatus = this.shareService.getLedStatus();
+    const fanStatus = this.shareService.getFanStatus();
+    const pumpStatus = this.shareService.getPumpStatus();
+
+    this.server.emit('fan', fanStatus);
+    this.server.emit('pump', pumpStatus);
+    this.server.emit('led', ledStatus);
     this.server.emit('message', 'Hello, client!');
   }
 
@@ -67,16 +75,16 @@ export class SocketGatewayService {
 
   @SubscribeMessage('led')
   handleLed(client: any, payload: any): void { 
-    this.publish('iot-control.led', payload.toString())
+      this.publish('iot-control.led', payload.toString());
   }
 
   @SubscribeMessage('fan')
   handleFan(client: any, payload: any) { 
-    this.publish('iot-control.fan', payload.toString())
+      this.publish('iot-control.fan',  payload.toString());
   }
 
   @SubscribeMessage('pump')
   handleWaterPump(client: any, payload: any) { 
-    this.publish('iot-control.pump', payload.toString())
+      this.publish('iot-control.pump', payload.toString());
   }
 }

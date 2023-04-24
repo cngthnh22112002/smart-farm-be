@@ -11,6 +11,7 @@ import { GardenModule } from './garden/garden.module';
 import { NotificationModule } from './notification/notification.module';
 import { DictionaryModule } from './dictionary/dictionary.module';
 import { DevicesModule } from './devices/devices.module';
+import { ShareModule } from './share/share.module';
 
 
 @Module({
@@ -28,6 +29,7 @@ import { DevicesModule } from './devices/devices.module';
     NotificationModule,
     DictionaryModule,
     DevicesModule,
+    ShareModule,
   ],
   controllers: [AppController],
   providers: [AppService],

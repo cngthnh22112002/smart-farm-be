@@ -27,6 +27,18 @@ let DevicesService = class DevicesService {
         this.waterpumpModel = waterpumpModel;
         this.gardenModel = gardenModel;
     }
+    async getLed(device_id) {
+        const led = await this.ledModel.findById(device_id.ledId);
+        return led;
+    }
+    async getFan(device_id) {
+        const fan = await this.fanModel.findById(device_id.fanId);
+        return fan;
+    }
+    async getPump(device_id) {
+        const pump = await this.waterpumpModel.findById(device_id.pumpId);
+        return pump;
+    }
     async createLed(user, garden_id) {
         const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);

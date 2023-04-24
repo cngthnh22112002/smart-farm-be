@@ -1,8 +1,10 @@
 import { Server, Socket } from 'socket.io';
 import { MqttService } from 'src/adafruit/adafruit_config';
+import { ShareService } from 'src/share/share.service';
 export declare class SocketGatewayService {
     private mqttService;
-    constructor(mqttService: MqttService);
+    private shareService;
+    constructor(mqttService: MqttService, shareService: ShareService);
     server: Server;
     private client;
     private feed;

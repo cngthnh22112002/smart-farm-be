@@ -9,8 +9,10 @@ import { UpdateLedrDto } from './dto/update-led.dto';
 import { UpdateFanrDto } from './dto/update-fan.dto';
 import { UpdatePumprDto } from './dto/update-pump.dto';
 import { Led } from './schema/led.schema';
-import { Types } from 'mongoose';
 import { GardenIdDto } from 'src/garden/dto/gardenId.dto';
+import { LedIdDto } from './dto/ledId.dto';
+import { FanIdDto } from './dto/fanId.dto';
+import { PumpIdDto } from './dto/pumpId.dto';
 
 @Injectable()
 export class DevicesService {
@@ -26,7 +28,22 @@ export class DevicesService {
 
     @InjectModel(Garden.name)
     private gardenModel: mongoose.Model<Garden>,
-) {}    
+) {}   
+
+    async getLed (device_id: LedIdDto): Promise<Led> {
+      const led = await this.ledModel.findById(device_id.ledId);
+      return led;
+    }
+
+    async getFan (device_id: FanIdDto): Promise<Fan> {
+      const fan = await this.fanModel.findById(device_id.fanId);
+      return fan;
+    }
+
+    async getPump (device_id: PumpIdDto): Promise<Waterpump> {
+      const pump = await this.waterpumpModel.findById(device_id.pumpId);
+      return pump;
+    }
 
     async createLed (user: User, garden_id: GardenIdDto): Promise<Led> {
         const gardenId = garden_id.gardenId;
