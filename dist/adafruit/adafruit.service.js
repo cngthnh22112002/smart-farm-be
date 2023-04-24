@@ -124,8 +124,7 @@ let AdafruitService = class AdafruitService {
                     gardenId: user.gardens[gardenIndex]._id,
                     value: parseFloat(message.toString())
                 };
-                const x = await this.sensorsService.createTemp(user, record);
-                console.log(x);
+                await this.sensorsService.createTemp(user, record);
             }
             if (topic == this.feed + 'iot-control.fan') {
                 this.socketService.server.emit('fan', message.toString());

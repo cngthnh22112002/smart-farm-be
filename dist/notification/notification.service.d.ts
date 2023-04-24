@@ -6,6 +6,7 @@ export declare class NotificationService {
     private notificationModel;
     constructor(notificationModel: mongoose.Model<Notification>);
     createNotification(user: User, notification: CreateNotificationDto): Promise<Notification>;
+    deleteAllNotification(user: User): Promise<User>;
     getTodayNotification(user: User): Promise<Notification[]>;
     getAllNotification(user: User, limit: number): Promise<Notification[]>;
 }

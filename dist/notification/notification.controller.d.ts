@@ -8,4 +8,5 @@ export declare class NotificationController {
         limit: string;
     }): Promise<import("./schema/notification.schema").Notification[]>;
     createNotification(req: any, notification: CreateNotificationDto): Promise<import("./schema/notification.schema").Notification>;
+    deleteAllNotification(req: any): Promise<import("../user/schema/user.schema").User>;
 }

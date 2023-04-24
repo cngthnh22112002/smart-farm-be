@@ -12,6 +12,8 @@ import { NotificationModule } from './notification/notification.module';
 import { DictionaryModule } from './dictionary/dictionary.module';
 import { DevicesModule } from './devices/devices.module';
 import { ShareModule } from './share/share.module';
+import { ReportService } from './report/report.service';
+import { ReportModule } from './report/report.module';
 
 
 @Module({
@@ -30,8 +32,9 @@ import { ShareModule } from './share/share.module';
     DictionaryModule,
     DevicesModule,
     ShareModule,
+    ReportModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ReportService],
 })
 export class AppModule {}

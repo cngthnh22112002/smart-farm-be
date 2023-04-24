@@ -12,12 +12,8 @@ export class MqttService {
 
   private connectUrl = `mqtt://${this.host}:${this.ada_port}`;
   private option = {
-      clientId: this.clientId,
-      clean: true,
-      connectTimeout: 10000,
       username: process.env.ADA_USERNAME,
       password: process.env.ADA_PASSWORD,
-      reconnectPeriod: 6000,
   }
 
   public getClient(): mqtt.Client {

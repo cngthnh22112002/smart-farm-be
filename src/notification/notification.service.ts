@@ -10,6 +10,7 @@ export class NotificationService {
     constructor(
         @InjectModel(Notification.name)
         private notificationModel: mongoose.Model<Notification>,
+
     ) {}
 
     async createNotification(user: User, notification: CreateNotificationDto): Promise<Notification> {
@@ -19,6 +20,15 @@ export class NotificationService {
         user.notifications.push(noti._id);
         user.save();
         return noti.save();
+    }
+
+    async deleteAllNotification(user: User): Promise<User> {
+      // Remove the motifications with the given ID from the user's notifications array
+      user.notifications.splice(0, user.notifications.length);
+      //// Remove the garden document from the gardenModel collection in the database
+      await this.notificationModel.deleteMany({userId: user._id})
+      // Save the updated user object to the database and return it
+      return user.save();
     }
 
     async getTodayNotification(user: User): Promise<Notification[]> {

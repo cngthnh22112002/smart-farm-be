@@ -30,6 +30,9 @@ let NotificationController = class NotificationController {
     async createNotification(req, notification) {
         return await this.notificationService.createNotification(req.user, notification);
     }
+    async deleteAllNotification(req) {
+        return await this.notificationService.deleteAllNotification(req.user);
+    }
 };
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
@@ -57,6 +60,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, create_notification_dto_1.CreateNotificationDto]),
     __metadata("design:returntype", Promise)
 ], NotificationController.prototype, "createNotification", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    (0, common_1.Delete)('all'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], NotificationController.prototype, "deleteAllNotification", null);
 NotificationController = __decorate([
     (0, common_1.Controller)('notification'),
     __metadata("design:paramtypes", [notification_service_1.NotificationService])

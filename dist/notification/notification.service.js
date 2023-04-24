@@ -29,6 +29,11 @@ let NotificationService = class NotificationService {
         user.save();
         return noti.save();
     }
+    async deleteAllNotification(user) {
+        user.notifications.splice(0, user.notifications.length);
+        await this.notificationModel.deleteMany({ userId: user._id });
+        return user.save();
+    }
     async getTodayNotification(user) {
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);

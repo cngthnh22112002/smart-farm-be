@@ -7,8 +7,8 @@ import { GardenIdDto } from './dto/gardenId.dto';
 export declare class GardenController {
     private readonly gardenService;
     constructor(gardenService: GardenService);
-    getOneGarden(req: any, gardenId: GardenIdDto): Promise<Garden>;
     getAllGarden(req: any): Promise<Garden[]>;
+    getOneGarden(req: any, gardenId: GardenIdDto): Promise<Garden>;
     createBlankNewGarden(req: any): Promise<User>;
     createNewGarden(req: any, newGarden: CreateGardenDto): Promise<User>;
     updateGarden(req: any, updateGarden: UpdateGardenDto): Promise<Garden>;

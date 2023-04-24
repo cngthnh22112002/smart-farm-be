@@ -13,16 +13,18 @@ export class GardenController {
     constructor(private readonly gardenService: GardenService) {}
 
     @UseGuards(AuthGuard())
+    @Get('all')
+    async getAllGarden(@Request() req: any): Promise<Garden[]> {
+        return this.gardenService.getAllGarden(req.user);
+    } 
+
+    @UseGuards(AuthGuard())
     @Get(':id')
     async getOneGarden(@Request() req: any, @Param('id') gardenId: GardenIdDto): Promise<Garden> {
         return this.gardenService.getOneGarden(req.user, gardenId);
     } 
 
-    @UseGuards(AuthGuard())
-    @Get('all')
-    async getAllGarden(@Request() req: any): Promise<Garden[]> {
-        return this.gardenService.getAllGarden(req.user);
-    } 
+
 
     @UseGuards(AuthGuard())
     @Post('blank')

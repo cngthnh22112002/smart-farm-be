@@ -17,12 +17,8 @@ let MqttService = class MqttService {
         this.feed = process.env.ADA_USERNAME + "/feeds/";
         this.connectUrl = `mqtt://${this.host}:${this.ada_port}`;
         this.option = {
-            clientId: this.clientId,
-            clean: true,
-            connectTimeout: 10000,
             username: process.env.ADA_USERNAME,
             password: process.env.ADA_PASSWORD,
-            reconnectPeriod: 6000,
         };
     }
     getClient() {

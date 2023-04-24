@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateNotificationDto } from './dto/create-notification.dto';
@@ -25,5 +25,11 @@ export class NotificationController {
     @Post()
     async createNotification(@Request() req:any, @Body() notification: CreateNotificationDto) {
         return await this.notificationService.createNotification(req.user, notification);
+    }
+
+    @UseGuards(AuthGuard())
+    @Delete('all')
+    async deleteAllNotification(@Request() req:any) {
+        return await this.notificationService.deleteAllNotification(req.user);
     }
 }

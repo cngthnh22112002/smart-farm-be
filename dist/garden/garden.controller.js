@@ -23,11 +23,11 @@ let GardenController = class GardenController {
     constructor(gardenService) {
         this.gardenService = gardenService;
     }
-    async getOneGarden(req, gardenId) {
-        return this.gardenService.getOneGarden(req.user, gardenId);
-    }
     async getAllGarden(req) {
         return this.gardenService.getAllGarden(req.user);
+    }
+    async getOneGarden(req, gardenId) {
+        return this.gardenService.getOneGarden(req.user, gardenId);
     }
     async createBlankNewGarden(req) {
         return this.gardenService.createBlankGarden(req.user);
@@ -47,6 +47,14 @@ let GardenController = class GardenController {
 };
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    (0, common_1.Get)('all'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], GardenController.prototype, "getAllGarden", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Param)('id')),
@@ -54,14 +62,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
     __metadata("design:returntype", Promise)
 ], GardenController.prototype, "getOneGarden", null);
-__decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
-    (0, common_1.Get)('all'),
-    __param(0, (0, common_1.Request)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], GardenController.prototype, "getAllGarden", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     (0, common_1.Post)('blank'),
