@@ -21,7 +21,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ type: Number, required: true }),
     __metadata("design:type", Number)
-], AVGDay.prototype, "value", void 0);
+], AVGDay.prototype, "average", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: Date, default: Date.now }),
     __metadata("design:type", Date)

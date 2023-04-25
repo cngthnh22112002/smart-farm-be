@@ -25,7 +25,7 @@
 import { Document, Types } from "mongoose";
 export declare class AVGDay extends Document {
     type: string;
-    value: number;
+    average: number;
     createdAt: Date;
     gardenId: Types.ObjectId;
 }

@@ -35,6 +35,6 @@ import { ReportModule } from './report/report.module';
     ReportModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ReportService],
+  providers: [AppService],
 })
 export class AppModule {}

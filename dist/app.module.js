@@ -21,7 +21,6 @@ const notification_module_1 = require("./notification/notification.module");
 const dictionary_module_1 = require("./dictionary/dictionary.module");
 const devices_module_1 = require("./devices/devices.module");
 const share_module_1 = require("./share/share.module");
-const report_service_1 = require("./report/report.service");
 const report_module_1 = require("./report/report.module");
 let AppModule = class AppModule {
 };
@@ -45,7 +44,7 @@ AppModule = __decorate([
             report_module_1.ReportModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, report_service_1.ReportService],
+        providers: [app_service_1.AppService],
     })
 ], AppModule);
 exports.AppModule = AppModule;

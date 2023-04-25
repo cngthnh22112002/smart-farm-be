@@ -7,7 +7,7 @@ export class AVGMonth extends Document {
   type: string;
 
   @Prop({ type: Number, required: true })
-  value: number;
+  average: number;
 
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
