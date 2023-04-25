@@ -100,7 +100,7 @@ export class SensorsService {
       endOfToday.setHours(23, 59, 59, 999); // set the time to 23:59:59.999
 
       
-      const todayTemps = await this.temperatureModel.aggregate([
+      const todayReport = await model.aggregate([
         {
           $match: {
             gardenId: (await garden)._id,
@@ -123,7 +123,8 @@ export class SensorsService {
           },
         },
       ]);
-      return todayTemps;
+
+      return todayReport;
     }
 
 }

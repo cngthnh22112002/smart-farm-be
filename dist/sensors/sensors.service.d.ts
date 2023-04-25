@@ -8,8 +8,8 @@ import { CreateHumirDto } from './dto/create-humi.dto';
 import { CreateLightrDto } from './dto/create-light.dto';
 import { CreateSmrDto } from './dto/create-sm.dto';
 import { CreateTemprDto } from './dto/create-temp.dto';
-import { GardenIdDto } from 'src/garden/dto/gardenId.dto';
 import { GardenService } from 'src/garden/garden.service';
+import { ReportDto } from 'src/report/dto/report.dto';
 export declare class SensorsService {
     private gardenService;
     private humidityModel;
@@ -21,8 +21,5 @@ export declare class SensorsService {
     createLight(user: User, createLight: CreateLightrDto): Promise<Light>;
     createSm(user: User, createSm: CreateSmrDto): Promise<Soilmoisture>;
     createTemp(user: User, createTemp: CreateTemprDto): Promise<Temperature>;
-    getTodayTemperature(user: User, gardenId: GardenIdDto): Promise<Temperature[]>;
-    getTodayLight(user: User, gardenId: GardenIdDto): Promise<Temperature[]>;
-    getTodayHumi(user: User, gardenId: GardenIdDto): Promise<Temperature[]>;
-    getTodaySm(user: User, gardenId: GardenIdDto): Promise<Temperature[]>;
+    getTodayReport(user: User, report: ReportDto): Promise<any>;
 }

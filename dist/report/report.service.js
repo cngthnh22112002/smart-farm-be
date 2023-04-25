@@ -129,13 +129,16 @@ let ReportService = class ReportService {
     async calculateAverageByMonth(type) {
         let model;
         if (type === 'temperature') {
-            model = this.avgdayModel;
+            model = this.temperatureModel;
         }
         else if (type === 'humidity') {
+            model = this.humidityModel;
         }
         else if (type === 'soilmoisture') {
+            model = this.soilmoistureModel;
         }
         else if (type === 'light') {
+            model = this.lightModel;
         }
         else {
             throw new Error('Invalid type parameter');

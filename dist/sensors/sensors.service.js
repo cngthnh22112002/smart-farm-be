@@ -65,16 +65,33 @@ let SensorsService = class SensorsService {
         const temp = await this.temperatureModel.create(createTemp);
         return temp.save();
     }
-    async getTodayTemperature(user, gardenId) {
+    async getTodayReport(user, report) {
+        const garden = this.gardenService.getOneGarden(user, { gardenId: report.gardenId });
+        const type = report.type;
+        let model;
+        if (type === 'temperature') {
+            model = this.temperatureModel;
+        }
+        else if (type === 'humidity') {
+            model = this.humidityModel;
+        }
+        else if (type === 'soilmoisture') {
+            model = this.soilmoistureModel;
+        }
+        else if (type === 'light') {
+            model = this.lightModel;
+        }
+        else {
+            throw new Error('Invalid type parameter');
+        }
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
         const endOfToday = new Date();
         endOfToday.setHours(23, 59, 59, 999);
-        const garden = await this.gardenService.getOneGarden(user, gardenId);
-        const todayTemps = await this.temperatureModel.aggregate([
+        const todayReport = await model.aggregate([
             {
                 $match: {
-                    gardenId: garden._id,
+                    gardenId: (await garden)._id,
                     createdAt: { $gte: startOfToday, $lte: endOfToday },
                 },
             },
@@ -94,100 +111,7 @@ let SensorsService = class SensorsService {
                 },
             },
         ]);
-        return todayTemps;
-    }
-    async getTodayLight(user, gardenId) {
-        const startOfToday = new Date();
-        startOfToday.setHours(0, 0, 0, 0);
-        const endOfToday = new Date();
-        endOfToday.setHours(23, 59, 59, 999);
-        const garden = await this.gardenService.getOneGarden(user, gardenId);
-        const todayLights = await this.lightModel.aggregate([
-            {
-                $match: {
-                    gardenId: garden._id,
-                    createdAt: { $gte: startOfToday, $lte: endOfToday },
-                },
-            },
-            {
-                $lookup: {
-                    from: 'gardens',
-                    localField: 'gardenId',
-                    foreignField: '_id',
-                    as: 'garden',
-                },
-            },
-            {
-                $project: {
-                    _id: 0,
-                    value: 1,
-                    createdAt: 1,
-                },
-            },
-        ]);
-        return todayLights;
-    }
-    async getTodayHumi(user, gardenId) {
-        const startOfToday = new Date();
-        startOfToday.setHours(0, 0, 0, 0);
-        const endOfToday = new Date();
-        endOfToday.setHours(23, 59, 59, 999);
-        const garden = await this.gardenService.getOneGarden(user, gardenId);
-        const todayHumis = await this.humidityModel.aggregate([
-            {
-                $match: {
-                    gardenId: garden._id,
-                    createdAt: { $gte: startOfToday, $lte: endOfToday },
-                },
-            },
-            {
-                $lookup: {
-                    from: 'gardens',
-                    localField: 'gardenId',
-                    foreignField: '_id',
-                    as: 'garden',
-                },
-            },
-            {
-                $project: {
-                    _id: 0,
-                    value: 1,
-                    createdAt: 1,
-                },
-            },
-        ]);
-        return todayHumis;
-    }
-    async getTodaySm(user, gardenId) {
-        const startOfToday = new Date();
-        startOfToday.setHours(0, 0, 0, 0);
-        const endOfToday = new Date();
-        endOfToday.setHours(23, 59, 59, 999);
-        const garden = await this.gardenService.getOneGarden(user, gardenId);
-        const todaySms = await this.soilmoistureModel.aggregate([
-            {
-                $match: {
-                    gardenId: garden._id,
-                    createdAt: { $gte: startOfToday, $lte: endOfToday },
-                },
-            },
-            {
-                $lookup: {
-                    from: 'gardens',
-                    localField: 'gardenId',
-                    foreignField: '_id',
-                    as: 'garden',
-                },
-            },
-            {
-                $project: {
-                    _id: 0,
-                    value: 1,
-                    createdAt: 1,
-                },
-            },
-        ]);
-        return todaySms;
+        return todayReport;
     }
 };
 SensorsService = __decorate([

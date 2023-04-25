@@ -16,13 +16,13 @@ exports.SensorsController = void 0;
 const common_1 = require("@nestjs/common");
 const sensors_service_1 = require("./sensors.service");
 const passport_1 = require("@nestjs/passport");
-const gardenId_dto_1 = require("../garden/dto/gardenId.dto");
+const report_dto_1 = require("../report/dto/report.dto");
 let SensorsController = class SensorsController {
     constructor(sensorService) {
         this.sensorService = sensorService;
     }
-    async getTodayTemp(req, gardenId) {
-        return this.sensorService.getTodayTemperature(req.user, gardenId);
+    async getTodayTemp(req, report) {
+        return this.sensorService.getTodayReport(req.user, report);
     }
 };
 __decorate([
@@ -31,7 +31,7 @@ __decorate([
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
+    __metadata("design:paramtypes", [Object, report_dto_1.ReportDto]),
     __metadata("design:returntype", Promise)
 ], SensorsController.prototype, "getTodayTemp", null);
 SensorsController = __decorate([
