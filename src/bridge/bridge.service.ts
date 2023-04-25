@@ -28,8 +28,6 @@ export class BridgeService {
         await this.adafruitService.handleData(client, user, gardenId);
     }
 
-    
-
     async connectDevice(user: User, allId: AllIdDto) {
         this.shareService.setId(allId);
         const ledStatus = (await this.deviceService.getLed({ledId: allId.ledId})).status

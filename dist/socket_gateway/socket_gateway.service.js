@@ -38,6 +38,7 @@ let SocketGatewayService = class SocketGatewayService {
         const ledStatus = this.shareService.getLedStatus();
         const fanStatus = this.shareService.getFanStatus();
         const pumpStatus = this.shareService.getPumpStatus();
+        console.log(ledStatus);
         this.server.emit('fan', fanStatus);
         this.server.emit('pump', pumpStatus);
         this.server.emit('led', ledStatus);

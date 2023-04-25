@@ -18,16 +18,17 @@ export class BridgeController {
     }
 
     @UseGuards(AuthGuard())
+    @Get('connect')
+    async connect (@Request() req: any) {
+        this.bridgeService.connect(req.user);
+    }
+
+    @UseGuards(AuthGuard())
     @Get('disconnect')
     async disconnect (@Request() req: any) {
         this.bridgeService.disconnect(req.user);
     }
 
-    @UseGuards(AuthGuard())
-    @Get('connect')
-    async connect (@Request() req: any) {
-        this.bridgeService.connect(req.user);
-    }
 
     @UseGuards(AuthGuard())
     @Post()

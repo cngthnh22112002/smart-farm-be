@@ -84,8 +84,9 @@ export class AdafruitService {
         }
 
         client.on('message', async (topic: string, message: Buffer) => {
-            console.log(`Received message on topic ${topic}: ${message.toString()}`);
+            //console.log(`Received message on topic ${topic}: ${message.toString()}`);
 
+            var lux = parseFloat(message.toString());
             // Handle data from light-sensor
             if(topic == this.feed + 'iot-sensor.lux') {
                 const now = new Date();
@@ -96,13 +97,23 @@ export class AdafruitService {
                 this.socketService.server.emit('light-sensor', JSON.stringify(data));
                 const record = {
                     gardenId: user.gardens[gardenIndex]._id,
-                    value: parseFloat(message.toString())
+                    value: lux
                 }
                 await this.sensorsService.createLight(user, record);
+                if( lux < 2000 ) {
+                    this.socketService.server.emit('led', '1');
+                    this.shareService.setFanStatus(message.toString());
+                    this.publish(client,'iot-control.led', '1');
+                } else if (lux > 2000) {
+                    this.socketService.server.emit('led', '0');
+                    this.shareService.setFanStatus(message.toString());
+                    this.publish(client,'iot-control.led', '0');
+                }
             }
 
             // Handle data from soilmoisture-sensor
             if(topic == this.feed + 'iot-sensor.sm') {
+                var sm = parseFloat(message.toString());
                 const now = new Date();
                 const data = {
                   value: message.toString(),
@@ -114,10 +125,20 @@ export class AdafruitService {
                     value: parseFloat(message.toString())
                 }
                 await this.sensorsService.createSm(user, record);
+                if( sm < 5 ) {
+                    this.socketService.server.emit('pump', '1');
+                    this.shareService.setFanStatus(message.toString());
+                    this.publish(client,'iot-control.pump', '1');
+                } else if (sm > 5) {
+                    this.socketService.server.emit('pump', '0');
+                    this.shareService.setFanStatus(message.toString());
+                    this.publish(client,'iot-control.pump', '0');
+                }
             }
 
             // Handle data from humidity-sensor
             if(topic == this.feed + 'iot-sensor.humi') {
+                var humi = parseFloat(message.toString());
                 const now = new Date();
                 const data = {
                   value: message.toString(),
@@ -130,22 +151,40 @@ export class AdafruitService {
                     value: parseFloat(message.toString())
                 }
                 await this.sensorsService.createHumi(user, record);
+                if( humi < 50 ) {
+                    this.socketService.server.emit('pump', '1');
+                    this.shareService.setFanStatus(message.toString());
+                    this.publish(client,'iot-control.pump', '1');
+                } else if( humi > 50 ) {
+                    this.socketService.server.emit('pump', '0');
+                    this.shareService.setFanStatus(message.toString());
+                    this.publish(client,'iot-control.pump', '0');
+                }
             }
 
             // Handle data from temperature-sensor
             if(topic == this.feed + 'iot-sensor.temp') {
+                var temp = parseFloat(message.toString());
                 const now = new Date();
                 const data = {
                   value: message.toString(),
                   createAt: now.toISOString()
                 };
-                console.log(data);
                 this.socketService.server.emit('temperature-sensor', JSON.stringify(data));
                 const record = {
                     gardenId: user.gardens[gardenIndex]._id,
                     value: parseFloat(message.toString())
                 }
                 await this.sensorsService.createTemp(user, record);
+                if( temp > 27 ) {
+                    this.socketService.server.emit('fan', '1');
+                    this.shareService.setFanStatus(message.toString());
+                    this.publish(client,'iot-control.fan', '1');
+                } else if( temp < 27 ) {
+                    this.socketService.server.emit('fan', '0');
+                    this.shareService.setFanStatus(message.toString());
+                    this.publish(client,'iot-control.fan', '0');
+                }
             }
 
             // Handle data from fan

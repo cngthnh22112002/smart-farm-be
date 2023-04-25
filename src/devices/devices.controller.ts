@@ -26,6 +26,12 @@ export class DevicesController {
     }
 
     @UseGuards(AuthGuard())
+    @Post('pump')
+    async createPump(@Request() req: any, @Body() gardenId: GardenIdDto): Promise<Fan> {
+        return this.deviceService.createPump(req.user, gardenId);
+    }
+
+    @UseGuards(AuthGuard())
     @Get('led')
     async getLed(@Request() req: any, @Query() deviceId: LedIdDto): Promise<Led> {
         return this.deviceService.getLed(deviceId);
