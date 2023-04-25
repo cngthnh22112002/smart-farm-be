@@ -11,13 +11,13 @@ export class UserController {
 
   @UseGuards(AuthGuard())
   @Get()
-  async getCurrentUser(@Request() req): Promise<User> {
+  async getCurrentUser(@Request() req: any): Promise<User> {
       return this.userService.getCurrentUser(req.user);
   }
 
   @UseGuards(AuthGuard())
   @Put()
-  async updateUser(@Request() req, @Body() updateUser: UpdateUserDto): Promise<User> {
+  async updateUser(@Request() req: any, @Body() updateUser: UpdateUserDto): Promise<User> {
       return this.userService.updateUser(req.user, updateUser);
   } 
 }
