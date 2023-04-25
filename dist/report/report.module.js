@@ -18,12 +18,14 @@ const humidity_schema_1 = require("../sensors/schema/humidity.schema");
 const light_schema_1 = require("../sensors/schema/light.schema");
 const soilmoisture_schema_1 = require("../sensors/schema/soilmoisture.schema");
 const temperature_schema_1 = require("../sensors/schema/temperature.schema");
+const garden_module_1 = require("../garden/garden.module");
 let ReportModule = class ReportModule {
 };
 ReportModule = __decorate([
     (0, common_1.Module)({
         imports: [
             auth_module_1.AuthModule,
+            garden_module_1.GardenModule,
             mongoose_1.MongooseModule.forFeature([{ name: avg_day_schema_1.AVGDay.name, schema: avg_day_schema_1.AVGDaySchema }]),
             mongoose_1.MongooseModule.forFeature([{ name: avg_month_schema_1.AVGMonth.name, schema: avg_month_schema_1.AVGMonthSchema }]),
             mongoose_1.MongooseModule.forFeature([{ name: humidity_schema_1.Humidity.name, schema: humidity_schema_1.HumiditySchema }]),

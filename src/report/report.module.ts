@@ -9,10 +9,12 @@ import { Humidity, HumiditySchema } from 'src/sensors/schema/humidity.schema';
 import { Light, LightSchema } from 'src/sensors/schema/light.schema';
 import { Soilmoisture, SoilmoistureSchema } from 'src/sensors/schema/soilmoisture.schema';
 import { Temperature, TemperatureSchema } from 'src/sensors/schema/temperature.schema';
+import { GardenModule } from 'src/garden/garden.module';
 
 @Module({
   imports:[
     AuthModule,
+    GardenModule,
     MongooseModule.forFeature([{ name: AVGDay.name, schema: AVGDaySchema }]),
     MongooseModule.forFeature([{ name: AVGMonth.name, schema: AVGMonthSchema }]),
     MongooseModule.forFeature([{ name: Humidity.name, schema: HumiditySchema }]),

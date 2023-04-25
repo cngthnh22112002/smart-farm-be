@@ -1,13 +1,23 @@
-import { Controller, Get, Request } from '@nestjs/common';
+import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
+import { ReportDto } from './dto/report.dto';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller('report')
+@Controller('reports')
 export class ReportController {
     constructor(private reportService: ReportService) {}
 
-    @Get('avgday/temperature')
-    async avgDayTemp (): Promise<any> {
-        return await this.reportService.calculateAverageByDay('temperature');
+
+    @UseGuards(AuthGuard())
+    @Get('week')
+    async getAvgTempForPastWeek (@Request() req:any, @Query() report: ReportDto): Promise<any> {
+        return await this.reportService.getAvgForPastWeek(req.user , report);
+    }
+
+    @UseGuards(AuthGuard())
+    @Get('month')
+    async getAvgTempForPastYear (@Request() req:any, @Query() report: ReportDto): Promise<any> {
+        return await this.reportService.getAvgForPastYear(req.user,report);
     }
 
 

@@ -48,6 +48,9 @@ export class DevicesService {
     async createLed (user: User, garden_id: GardenIdDto): Promise<Led> {
         const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
+        if(!garden) {
+          throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
         const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if(gardenIndex === -1) {
           throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
@@ -61,6 +64,9 @@ export class DevicesService {
     async createFan (user: User, garden_id: GardenIdDto): Promise<Fan> {
         const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
+        if(!garden) {
+          throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
         const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if(gardenIndex === -1) {
           throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
@@ -74,6 +80,9 @@ export class DevicesService {
     async createPump (user: User, garden_id: GardenIdDto): Promise<Waterpump> {
         const gardenId = garden_id.gardenId;
         const garden = await this.gardenModel.findById(gardenId);
+        if(!garden) {
+          throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
         const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(garden._id)));
         if(gardenIndex === -1) {
           throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
@@ -89,6 +98,9 @@ export class DevicesService {
         const ledId = updateLed.ledId;
 
         const garden = await this.gardenModel.findById(gardenId);
+        if(!garden) {
+          throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
         const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
         const ledIndex = garden.leds.findIndex((led) => (led.equals(ledId)));
 
@@ -110,6 +122,9 @@ export class DevicesService {
         const fanId = updateFan.fanId;
 
         const garden = await this.gardenModel.findById(gardenId);
+        if(!garden) {
+          throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
         const gardenIndex = user.gardens.findIndex((garden) => (garden.equals(gardenId)));
         const fanIndex = garden.fans.findIndex((fan) => (fan.equals(fanId)));
         if(gardenIndex === -1) {
@@ -129,6 +144,9 @@ export class DevicesService {
         const gardenId = updatePump.gardenId;
         const pumpId = updatePump.pumpId;
         const garden = await this.gardenModel.findById(gardenId);
+        if(!garden) {
+          throw new NotFoundException(`Garden with ID ${gardenId} not found for user`);
+        }
 
         const isValidGarden = mongoose.isValidObjectId(gardenId);
         const isValidLed = mongoose.isValidObjectId(pumpId);

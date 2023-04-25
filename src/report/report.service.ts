@@ -3,11 +3,13 @@ import { AVGDay } from './schema/day/avg-day.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { AVGMonth } from './schema/month/avg-month.schema';
 import mongoose from 'mongoose';
-import schedule from 'node-schedule';
+import * as schedule from 'node-schedule';
 import { Temperature } from 'src/sensors/schema/temperature.schema';
 import { Humidity } from 'src/sensors/schema/humidity.schema';
 import { Soilmoisture } from 'src/sensors/schema/soilmoisture.schema';
 import { Light } from 'src/sensors/schema/light.schema';
+import { ReportDto } from './dto/report.dto';
+import { GardenService } from 'src/garden/garden.service';
 import { User } from 'src/user/schema/user.schema';
 
 @Injectable()
@@ -30,6 +32,8 @@ export class ReportService {
 
         @InjectModel(Temperature.name)
         private temperatureModel: mongoose.Model<Temperature>,
+
+        private gardenService: GardenService
 
     ) {
           // Schedule the job to run at 12:00 AM on each day
@@ -187,23 +191,51 @@ export class ReportService {
       }
     };
 
-    async getAvgTempForPastWeek(gardenId: string, type: string): Promise<any> {
-      // Calculate the date seven days ago
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      
-      // Query the database for the past week's data for the specified gardenId
-      const query = { 
-        gardenId: gardenId, 
-        type: type,
-        createdAt: { $gte: sevenDaysAgo }
-      };
-      
-      const result = await this.avgdayModel.find(query).sort({ createdAt: 'asc' }).exec();
-      return result;
-    }
+    async getAvgForPastWeek(user: User, report: ReportDto): Promise<any> {
+      const garden = this.gardenService.getOneGarden(user, {gardenId: report.gardenId});
+      const type = report.type;
 
-    async getAvgTempForPastYear(gardenId: string, type: string): Promise<any> {
+      const startOfPastWeek = new Date();
+      startOfPastWeek.setDate(startOfPastWeek.getDate() - 7);
+      startOfPastWeek.setHours(0, 0, 0, 0); // set the time to 00:00:00.000
+    
+      const endOfToday = new Date();
+      endOfToday.setHours(23, 59, 59, 999); // set the time to 23:59:59.999
+    
+      const pastWeekReports = await this.avgdayModel.aggregate([
+        {
+          $match: {
+            gardenId: (await garden)._id,
+            type: type,
+            createdAt: { $gte: startOfPastWeek, $lte: endOfToday },
+          },
+        },
+        {
+          $lookup: {
+            from: 'gardens',
+            localField: 'gardenId',
+            foreignField: '_id',
+            as: 'garden',
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            average: 1,
+            createdAt: 1,
+            gardenId: 1
+          },
+        },
+      ]);
+    
+      return pastWeekReports;
+    }
+    
+
+    async getAvgForPastYear(user: User, report: ReportDto): Promise<any> {
+      const garden = this.gardenService.getOneGarden(user, {gardenId: report.gardenId});
+      const type = report.type;
+
       // Get the current year
       const currentYear = new Date().getFullYear();
     
@@ -213,7 +245,7 @@ export class ReportService {
     
       // Query the database for the past year's data for the specified gardenId
       const query = { 
-        gardenId: gardenId, 
+        gardenId: (await garden)._id, 
         type: type,
         createdAt: { $gte: oneYearAgo },
         $expr: {
@@ -221,7 +253,7 @@ export class ReportService {
         }
       };
       
-      const result = await this.avgdayModel.find(query).sort({ createdAt: 'asc' }).exec();
+      const result = await this.avgmonthModel.find(query).sort({ createdAt: 'asc' }).exec();
       return result;
     }
 }

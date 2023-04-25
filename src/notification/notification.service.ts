@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { User } from 'src/user/schema/user.schema';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { Notification } from './schema/notification.schema';
+import { GardenService } from 'src/garden/garden.service';
 
 @Injectable()
 export class NotificationService {
