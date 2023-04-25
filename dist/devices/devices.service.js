@@ -51,7 +51,8 @@ let DevicesService = class DevicesService {
         }
         const led = await this.ledModel.create({ gardenId: gardenId });
         garden.leds.push(led._id);
-        return led;
+        garden.save();
+        return led.save();
     }
     async createFan(user, garden_id) {
         const gardenId = garden_id.gardenId;
@@ -65,7 +66,8 @@ let DevicesService = class DevicesService {
         }
         const fan = await this.fanModel.create({ gardenId: gardenId });
         garden.fans.push(fan._id);
-        return fan;
+        garden.save();
+        return fan.save();
     }
     async createPump(user, garden_id) {
         const gardenId = garden_id.gardenId;
@@ -79,7 +81,8 @@ let DevicesService = class DevicesService {
         }
         const pump = await this.waterpumpModel.create({ gardenId: gardenId });
         garden.water_pumps.push(pump._id);
-        return pump;
+        garden.save();
+        return pump.save();
     }
     async updateLed(user, updateLed) {
         const gardenId = updateLed.gardenId;
