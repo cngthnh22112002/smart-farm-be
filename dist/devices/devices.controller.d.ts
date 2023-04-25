@@ -11,6 +11,7 @@ export declare class DevicesController {
     constructor(deviceService: DevicesService);
     createLed(req: any, gardenId: GardenIdDto): Promise<Led>;
     createFan(req: any, gardenId: GardenIdDto): Promise<Fan>;
+    createPump(req: any, gardenId: GardenIdDto): Promise<Fan>;
     getLed(req: any, deviceId: LedIdDto): Promise<Led>;
     getFan(req: any, deviceId: FanIdDto): Promise<Fan>;
     getPump(req: any, deviceId: PumpIdDto): Promise<Waterpump>;

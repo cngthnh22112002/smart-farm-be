@@ -10,7 +10,7 @@ export declare class SocketGatewayService {
     private feed;
     publish(topic: string, message: string): void;
     setClient(client: any): void;
-    handleConnection(client: Socket): void;
+    handleConnection(client: Socket): Promise<void>;
     handleMessage(client: Socket, payload: any): string;
     handleDisconnect(client: Socket): void;
     handleNotification(client: any, payload: any): Promise<void>;

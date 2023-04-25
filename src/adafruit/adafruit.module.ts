@@ -20,7 +20,7 @@ import { ShareService } from 'src/share/share.service';
         MongooseModule.forFeature([{ name: Waterpump.name, schema: WaterpumpSchema }]),
         MongooseModule.forFeature([{ name: Garden.name, schema: GardenSchema }]),
     ],
-    providers: [MqttService, SocketGatewayService, AdafruitService, ShareService],
+    providers: [MqttService, ShareService, AdafruitService, SocketGatewayService,],
     exports:[AdafruitService]
 })
 export class AdafruitModule {}

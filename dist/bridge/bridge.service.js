@@ -15,12 +15,14 @@ const adafruit_service_1 = require("../adafruit/adafruit.service");
 const adafruit_config_1 = require("../adafruit/adafruit_config");
 const devices_service_1 = require("../devices/devices.service");
 const share_service_1 = require("../share/share.service");
+const socket_gateway_service_1 = require("../socket_gateway/socket_gateway.service");
 let BridgeService = class BridgeService {
-    constructor(adafruitService, mqttService, shareService, deviceService) {
+    constructor(adafruitService, mqttService, shareService, deviceService, socketService) {
         this.adafruitService = adafruitService;
         this.mqttService = mqttService;
         this.shareService = shareService;
         this.deviceService = deviceService;
+        this.socketService = socketService;
         this.mqttService.init();
     }
     async handleData(user, gardenId) {
@@ -33,12 +35,15 @@ let BridgeService = class BridgeService {
     }
     async connectDevice(user, allId) {
         this.shareService.setId(allId);
-        const ledStatus = (await this.deviceService.getLed({ ledId: allId.ledId })).status;
-        const fanStatus = (await this.deviceService.getFan({ fanId: allId.fanId })).status;
-        const pumpStatus = (await this.deviceService.getPump({ pumpId: allId.pumpId })).status;
-        this.shareService.setFanStatus(fanStatus);
-        this.shareService.setLedStatus(ledStatus);
-        this.shareService.setPumpStatus(pumpStatus);
+        const led = await this.deviceService.getLed({ ledId: allId.ledId });
+        this.shareService.setLedStatus(led.status);
+        const fan = await this.deviceService.getFan({ fanId: allId.fanId });
+        this.shareService.setFanStatus(fan.status);
+        const pump = await this.deviceService.getPump({ pumpId: allId.pumpId });
+        this.shareService.setPumpStatus(pump.status);
+        this.socketService.server.emit('led', led.status);
+        this.socketService.server.emit('fan', fan.status);
+        this.socketService.server.emit('pump', pump.status);
     }
     connect(user) {
         this.mqttService.init();
@@ -54,7 +59,8 @@ BridgeService = __decorate([
     __metadata("design:paramtypes", [adafruit_service_1.AdafruitService,
         adafruit_config_1.MqttService,
         share_service_1.ShareService,
-        devices_service_1.DevicesService])
+        devices_service_1.DevicesService,
+        socket_gateway_service_1.SocketGatewayService])
 ], BridgeService);
 exports.BridgeService = BridgeService;
 //# sourceMappingURL=bridge.service.js.map

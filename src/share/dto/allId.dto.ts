@@ -4,10 +4,6 @@ import { Types } from 'mongoose';
 export class AllIdDto {
     @IsNotEmpty()
     @IsMongoId()
-    gardenId: Types.ObjectId
-
-    @IsNotEmpty()
-    @IsMongoId()
     ledId: Types.ObjectId
 
     @IsNotEmpty()

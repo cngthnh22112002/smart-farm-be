@@ -18,11 +18,6 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsMongoId)(),
     __metadata("design:type", mongoose_1.Types.ObjectId)
-], AllIdDto.prototype, "gardenId", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsMongoId)(),
-    __metadata("design:type", mongoose_1.Types.ObjectId)
 ], AllIdDto.prototype, "ledId", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),

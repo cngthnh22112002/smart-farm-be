@@ -6,6 +6,7 @@ import { DevicesService } from 'src/devices/devices.service';
 import { GardenIdDto } from 'src/garden/dto/gardenId.dto';
 import { AllIdDto } from 'src/share/dto/allId.dto';
 import { ShareService } from 'src/share/share.service';
+import { SocketGatewayService } from 'src/socket_gateway/socket_gateway.service';
 import { User } from 'src/user/schema/user.schema';
 
 @Injectable()
@@ -14,7 +15,8 @@ export class BridgeService {
         private adafruitService: AdafruitService,
         private mqttService: MqttService,
         private shareService: ShareService,
-        private deviceService: DevicesService
+        private deviceService: DevicesService,
+        private socketService: SocketGatewayService
     ) { 
         this.mqttService.init();
     }
@@ -30,13 +32,16 @@ export class BridgeService {
 
     async connectDevice(user: User, allId: AllIdDto) {
         this.shareService.setId(allId);
-        const ledStatus = (await this.deviceService.getLed({ledId: allId.ledId})).status
-        const fanStatus = (await this.deviceService.getFan({fanId: allId.fanId})).status
-        const pumpStatus = (await this.deviceService.getPump({pumpId: allId.pumpId})).status
-
-        this.shareService.setFanStatus(fanStatus);
-        this.shareService.setLedStatus(ledStatus);
-        this.shareService.setPumpStatus(pumpStatus);
+        const led = await this.deviceService.getLed({ledId: allId.ledId})
+        this.shareService.setLedStatus(led.status);
+        const fan = await this.deviceService.getFan({fanId: allId.fanId})
+        this.shareService.setFanStatus(fan.status);
+        const pump = await this.deviceService.getPump({pumpId: allId.pumpId})
+        this.shareService.setPumpStatus(pump.status);  
+        
+        this.socketService.server.emit('led', led.status);
+        this.socketService.server.emit('fan', fan.status);
+        this.socketService.server.emit('pump', pump.status);
     }
 
     connect(user: User) {

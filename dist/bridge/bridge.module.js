@@ -15,6 +15,7 @@ const auth_module_1 = require("../auth/auth.module");
 const adafruit_config_1 = require("../adafruit/adafruit_config");
 const share_service_1 = require("../share/share.service");
 const devices_module_1 = require("../devices/devices.module");
+const socket_gateway_service_1 = require("../socket_gateway/socket_gateway.service");
 let BridgeModule = class BridgeModule {
 };
 BridgeModule = __decorate([
@@ -24,7 +25,7 @@ BridgeModule = __decorate([
             adafruit_module_1.AdafruitModule,
             devices_module_1.DevicesModule
         ],
-        providers: [adafruit_config_1.MqttService, bridge_service_1.BridgeService, share_service_1.ShareService],
+        providers: [adafruit_config_1.MqttService, bridge_service_1.BridgeService, socket_gateway_service_1.SocketGatewayService, share_service_1.ShareService],
         controllers: [bridge_controller_1.BridgeController],
         exports: [bridge_service_1.BridgeService]
     })

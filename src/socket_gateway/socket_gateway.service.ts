@@ -3,7 +3,6 @@ import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/web
 import { Server, Socket } from 'socket.io';
 import { MqttService } from 'src/adafruit/adafruit_config';
 import { ShareService } from 'src/share/share.service';
-import { DevicesService } from 'src/devices/devices.service';
 
 
 @WebSocketGateway({
@@ -35,20 +34,21 @@ export class SocketGatewayService {
   }
 
   public setClient(client : any): void {
-    console.log("Set client success !");
-    this.client = client;
+      console.log("Set client success !");
+      this.client = client;
   }
 
-  handleConnection(client: Socket) {
+
+
+  async handleConnection(client: Socket) {
     console.log(`Client ${client.id} connected`);
-    const ledStatus = this.shareService.getLedStatus();
-    const fanStatus = this.shareService.getFanStatus();
-    const pumpStatus = this.shareService.getPumpStatus();
 
-    console.log(ledStatus);
+    var ledStatus = this.shareService.getLedStatus();
+    var fanStatus = this.shareService.getFanStatus();
+    var pumpStatus = this.shareService.getPumpStatus();
 
-    this.server.emit('fan', fanStatus);
-    this.server.emit('pump', pumpStatus);
+    this.server.emit('fan', 'cc');
+    this.server.emit('pump', 'cc');
     this.server.emit('led', ledStatus);
     this.server.emit('message', 'Hello, client!');
   }

@@ -31,7 +31,7 @@ AdafruitModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: waterpump_schema_1.Waterpump.name, schema: waterpump_schema_1.WaterpumpSchema }]),
             mongoose_1.MongooseModule.forFeature([{ name: garden_schema_1.Garden.name, schema: garden_schema_1.GardenSchema }]),
         ],
-        providers: [adafruit_config_1.MqttService, socket_gateway_service_1.SocketGatewayService, adafruit_service_1.AdafruitService, share_service_1.ShareService],
+        providers: [adafruit_config_1.MqttService, share_service_1.ShareService, adafruit_service_1.AdafruitService, socket_gateway_service_1.SocketGatewayService,],
         exports: [adafruit_service_1.AdafruitService]
     })
 ], AdafruitModule);

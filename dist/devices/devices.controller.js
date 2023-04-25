@@ -30,6 +30,9 @@ let DevicesController = class DevicesController {
     async createFan(req, gardenId) {
         return this.deviceService.createFan(req.user, gardenId);
     }
+    async createPump(req, gardenId) {
+        return this.deviceService.createPump(req.user, gardenId);
+    }
     async getLed(req, deviceId) {
         return this.deviceService.getLed(deviceId);
     }
@@ -58,6 +61,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
     __metadata("design:returntype", Promise)
 ], DevicesController.prototype, "createFan", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
+    (0, common_1.Post)('pump'),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, gardenId_dto_1.GardenIdDto]),
+    __metadata("design:returntype", Promise)
+], DevicesController.prototype, "createPump", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     (0, common_1.Get)('led'),

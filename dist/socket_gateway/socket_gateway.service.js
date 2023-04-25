@@ -33,14 +33,13 @@ let SocketGatewayService = class SocketGatewayService {
         console.log("Set client success !");
         this.client = client;
     }
-    handleConnection(client) {
+    async handleConnection(client) {
         console.log(`Client ${client.id} connected`);
-        const ledStatus = this.shareService.getLedStatus();
-        const fanStatus = this.shareService.getFanStatus();
-        const pumpStatus = this.shareService.getPumpStatus();
-        console.log(ledStatus);
-        this.server.emit('fan', fanStatus);
-        this.server.emit('pump', pumpStatus);
+        var ledStatus = this.shareService.getLedStatus();
+        var fanStatus = this.shareService.getFanStatus();
+        var pumpStatus = this.shareService.getPumpStatus();
+        this.server.emit('fan', 'cc');
+        this.server.emit('pump', 'cc');
         this.server.emit('led', ledStatus);
         this.server.emit('message', 'Hello, client!');
     }

@@ -5,8 +5,8 @@ import { BridgeController } from './bridge.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { MqttService } from 'src/adafruit/adafruit_config';
 import { ShareService } from 'src/share/share.service';
-import { DevicesService } from 'src/devices/devices.service';
 import { DevicesModule } from 'src/devices/devices.module';
+import { SocketGatewayService } from 'src/socket_gateway/socket_gateway.service';
 
 @Module({
   imports:[
@@ -14,7 +14,7 @@ import { DevicesModule } from 'src/devices/devices.module';
     AdafruitModule,
     DevicesModule
   ],
-  providers: [MqttService,BridgeService,ShareService],
+  providers: [MqttService,BridgeService, SocketGatewayService ,ShareService],
   controllers: [BridgeController],
   exports: [BridgeService]
 })

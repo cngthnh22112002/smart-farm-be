@@ -19,7 +19,6 @@ let ShareService = class ShareService {
         return this.pumpStatus;
     }
     setId(allId) {
-        this.gardenId = allId.gardenId;
         this.ledId = allId.ledId;
         this.fanId = allId.fanId;
         this.pumpId = allId.pumpId;
