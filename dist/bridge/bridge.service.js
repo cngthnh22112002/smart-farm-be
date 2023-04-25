@@ -34,7 +34,6 @@ let BridgeService = class BridgeService {
         await this.adafruitService.handleData(client, user, gardenId);
     }
     async connectDevice(user, allId) {
-        this.shareService.setId(allId);
         const led = await this.deviceService.getLed({ ledId: allId.ledId });
         this.shareService.setLedStatus(led.status);
         const fan = await this.deviceService.getFan({ fanId: allId.fanId });

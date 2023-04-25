@@ -18,11 +18,6 @@ let ShareService = class ShareService {
     getPumpStatus() {
         return this.pumpStatus;
     }
-    setId(allId) {
-        this.ledId = allId.ledId;
-        this.fanId = allId.fanId;
-        this.pumpId = allId.pumpId;
-    }
     setLedStatus(status) {
         this.ledStatus = status;
     }
