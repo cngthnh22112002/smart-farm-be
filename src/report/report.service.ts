@@ -133,15 +133,15 @@ export class ReportService {
     };
 
     async calculateAverageByMonth(type: string): Promise<void> {
-      let model: mongoose.Model<AVGDay>;
+      let model: mongoose.Model<Temperature | Humidity | Soilmoisture | Light>;
       if (type === 'temperature') {
-        model = this.avgdayModel;
+        model = this.temperatureModel;
       } else if (type === 'humidity') {
-        // add code to handle humidity
+        model = this.humidityModel;
       } else if (type === 'soilmoisture') {
-        // add code to handle soilmoisture
+        model = this.soilmoistureModel;
       } else if (type === 'light') {
-        // add code to handle light
+        model = this.lightModel;
       } else {
         throw new Error('Invalid type parameter');
       }

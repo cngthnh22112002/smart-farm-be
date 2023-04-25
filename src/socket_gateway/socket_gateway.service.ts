@@ -77,6 +77,7 @@ export class SocketGatewayService {
 
   @SubscribeMessage('led')
   handleLed(client: any, payload: any): void { 
+      console.log(payload.toString());
       this.publish('iot-control.led', payload.toString());
   }
 

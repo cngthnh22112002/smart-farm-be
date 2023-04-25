@@ -56,6 +56,7 @@ let SocketGatewayService = class SocketGatewayService {
         this.server.emit('message', 'Hello from the server!');
     }
     handleLed(client, payload) {
+        console.log(payload.toString());
         this.publish('iot-control.led', payload.toString());
     }
     handleFan(client, payload) {
