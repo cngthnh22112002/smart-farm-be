@@ -6,10 +6,8 @@ import { GardenIdDto } from 'src/garden/dto/gardenId.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Garden } from 'src/garden/schema/garden.schema';
 import mongoose from 'mongoose';
-import { Led } from 'src/devices/schema/led.schema';
-import { Fan } from 'src/devices/schema/fan.schema';
-import { Waterpump } from 'src/devices/schema/waterpump.schema';
 import { ShareService } from 'src/share/share.service';
+import { NotificationService } from 'src/notification/notification.service';
 
 
 @Injectable()
@@ -18,18 +16,10 @@ export class AdafruitService {
         private socketService: SocketGatewayService,
         private sensorsService: SensorsService,
         private shareService: ShareService,
+        private notificationService: NotificationService,
 
         @InjectModel(Garden.name)
         private gardenModel: mongoose.Model<Garden>,
-
-        @InjectModel(Led.name)
-        private ledModel: mongoose.Model<Led>,
-    
-        @InjectModel(Fan.name)
-        private fanModel: mongoose.Model<Fan>,
-    
-        @InjectModel(Waterpump.name)
-        private waterpumpModel: mongoose.Model<Waterpump>,
     )  {}
     
 

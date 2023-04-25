@@ -19,19 +19,15 @@ const sensors_service_1 = require("../sensors/sensors.service");
 const mongoose_1 = require("@nestjs/mongoose");
 const garden_schema_1 = require("../garden/schema/garden.schema");
 const mongoose_2 = require("mongoose");
-const led_schema_1 = require("../devices/schema/led.schema");
-const fan_schema_1 = require("../devices/schema/fan.schema");
-const waterpump_schema_1 = require("../devices/schema/waterpump.schema");
 const share_service_1 = require("../share/share.service");
+const notification_service_1 = require("../notification/notification.service");
 let AdafruitService = class AdafruitService {
-    constructor(socketService, sensorsService, shareService, gardenModel, ledModel, fanModel, waterpumpModel) {
+    constructor(socketService, sensorsService, shareService, notificationService, gardenModel) {
         this.socketService = socketService;
         this.sensorsService = sensorsService;
         this.shareService = shareService;
+        this.notificationService = notificationService;
         this.gardenModel = gardenModel;
-        this.ledModel = ledModel;
-        this.fanModel = fanModel;
-        this.waterpumpModel = waterpumpModel;
         this.feed = process.env.ADA_USERNAME + "/feeds/";
     }
     subscribe(client, topic) {
@@ -188,13 +184,11 @@ let AdafruitService = class AdafruitService {
 };
 AdafruitService = __decorate([
     (0, common_1.Injectable)(),
-    __param(3, (0, mongoose_1.InjectModel)(garden_schema_1.Garden.name)),
-    __param(4, (0, mongoose_1.InjectModel)(led_schema_1.Led.name)),
-    __param(5, (0, mongoose_1.InjectModel)(fan_schema_1.Fan.name)),
-    __param(6, (0, mongoose_1.InjectModel)(waterpump_schema_1.Waterpump.name)),
+    __param(4, (0, mongoose_1.InjectModel)(garden_schema_1.Garden.name)),
     __metadata("design:paramtypes", [socket_gateway_service_1.SocketGatewayService,
         sensors_service_1.SensorsService,
-        share_service_1.ShareService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        share_service_1.ShareService,
+        notification_service_1.NotificationService, mongoose_2.default.Model])
 ], AdafruitService);
 exports.AdafruitService = AdafruitService;
 //# sourceMappingURL=adafruit.service.js.map

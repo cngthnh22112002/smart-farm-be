@@ -19,6 +19,7 @@ const fan_schema_1 = require("../devices/schema/fan.schema");
 const waterpump_schema_1 = require("../devices/schema/waterpump.schema");
 const garden_schema_1 = require("../garden/schema/garden.schema");
 const share_service_1 = require("../share/share.service");
+const notification_module_1 = require("../notification/notification.module");
 let AdafruitModule = class AdafruitModule {
 };
 AdafruitModule = __decorate([
@@ -26,6 +27,7 @@ AdafruitModule = __decorate([
         imports: [
             sensors_module_1.SensorsModule,
             devices_module_1.DevicesModule,
+            notification_module_1.NotificationModule,
             mongoose_1.MongooseModule.forFeature([{ name: led_schema_1.Led.name, schema: led_schema_1.LedSchema }]),
             mongoose_1.MongooseModule.forFeature([{ name: fan_schema_1.Fan.name, schema: fan_schema_1.FanSchema }]),
             mongoose_1.MongooseModule.forFeature([{ name: waterpump_schema_1.Waterpump.name, schema: waterpump_schema_1.WaterpumpSchema }]),

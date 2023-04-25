@@ -10,11 +10,13 @@ import { Fan, FanSchema } from 'src/devices/schema/fan.schema';
 import { Waterpump, WaterpumpSchema } from 'src/devices/schema/waterpump.schema';
 import { Garden, GardenSchema } from 'src/garden/schema/garden.schema';
 import { ShareService } from 'src/share/share.service';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
     imports: [
         SensorsModule,
         DevicesModule,
+        NotificationModule,
         MongooseModule.forFeature([{ name: Led.name, schema: LedSchema }]),
         MongooseModule.forFeature([{ name: Fan.name, schema: FanSchema }]),
         MongooseModule.forFeature([{ name: Waterpump.name, schema: WaterpumpSchema }]),
