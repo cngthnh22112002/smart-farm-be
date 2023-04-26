@@ -22,6 +22,7 @@ const dictionary_module_1 = require("./dictionary/dictionary.module");
 const devices_module_1 = require("./devices/devices.module");
 const share_module_1 = require("./share/share.module");
 const report_module_1 = require("./report/report.module");
+const schedule_1 = require("@nestjs/schedule");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -31,6 +32,7 @@ AppModule = __decorate([
                 envFilePath: '.env',
                 isGlobal: true
             }),
+            schedule_1.ScheduleModule.forRoot(),
             auth_module_1.AuthModule,
             mongoose_module_1.MongooseConnectiton,
             user_module_1.UserModule,

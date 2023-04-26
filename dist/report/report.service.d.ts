@@ -17,6 +17,8 @@ export declare class ReportService {
     private temperatureModel;
     private gardenService;
     constructor(avgdayModel: mongoose.Model<AVGDay>, avgmonthModel: mongoose.Model<AVGMonth>, humidityModel: mongoose.Model<Humidity>, lightModel: mongoose.Model<Light>, soilmoistureModel: mongoose.Model<Soilmoisture>, temperatureModel: mongoose.Model<Temperature>, gardenService: GardenService);
+    reportEveryDay(): Promise<void>;
+    reportEveryMonth(): Promise<void>;
     calculateAverageByDay(type: string): Promise<void>;
     calculateAverageByMonth(type: string): Promise<void>;
     getAvgForPastWeek(user: User, report: ReportDto): Promise<any>;

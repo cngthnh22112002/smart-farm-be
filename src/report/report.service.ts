@@ -3,7 +3,6 @@ import { AVGDay } from './schema/day/avg-day.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { AVGMonth } from './schema/month/avg-month.schema';
 import mongoose from 'mongoose';
-import * as schedule from 'node-schedule';
 import { Temperature } from 'src/sensors/schema/temperature.schema';
 import { Humidity } from 'src/sensors/schema/humidity.schema';
 import { Soilmoisture } from 'src/sensors/schema/soilmoisture.schema';
@@ -11,6 +10,7 @@ import { Light } from 'src/sensors/schema/light.schema';
 import { ReportDto } from './dto/report.dto';
 import { GardenService } from 'src/garden/garden.service';
 import { User } from 'src/user/schema/user.schema';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class ReportService {
@@ -35,22 +35,24 @@ export class ReportService {
 
         private gardenService: GardenService
 
-    ) {
-          // Schedule the job to run at 12:00 AM on each day
-          schedule.scheduleJob('0 0 * * *', () => {
-              this.calculateAverageByDay('temperature');
-              this.calculateAverageByDay('humidity');
-              this.calculateAverageByDay('soilmoisture');
-              this.calculateAverageByDay('light');
-          });
+    ) {}
 
-              // Schedule the job to run at 12:00 AM on the first day of every month
-          schedule.scheduleJob('0 0 1 * *', () => {
-            this.calculateAverageByMonth('temperature');
-            this.calculateAverageByMonth('humidity');
-            this.calculateAverageByMonth('soilmoisture');
-            this.calculateAverageByMonth('light');
-          });
+     // Schedule the job to run at 12:00 AM on each day
+    @Cron('0 0 * * *')
+    async reportEveryDay() {
+      await this.calculateAverageByDay('temperature');
+      await this.calculateAverageByDay('humidity');
+      await this.calculateAverageByDay('soilmoisture');
+      await this.calculateAverageByDay('light');
+    }
+
+    // Schedule the job to run at 12:00 AM on the first day of every month
+    @Cron('0 0 1 * *')
+    async reportEveryMonth() {
+      await this.calculateAverageByMonth('temperature');
+      await this.calculateAverageByMonth('humidity');
+      await this.calculateAverageByMonth('soilmoisture');
+      await this.calculateAverageByMonth('light');
     }
 
     async calculateAverageByDay(type: string): Promise<void> {

@@ -18,12 +18,12 @@ const avg_day_schema_1 = require("./schema/day/avg-day.schema");
 const mongoose_1 = require("@nestjs/mongoose");
 const avg_month_schema_1 = require("./schema/month/avg-month.schema");
 const mongoose_2 = require("mongoose");
-const schedule = require("node-schedule");
 const temperature_schema_1 = require("../sensors/schema/temperature.schema");
 const humidity_schema_1 = require("../sensors/schema/humidity.schema");
 const soilmoisture_schema_1 = require("../sensors/schema/soilmoisture.schema");
 const light_schema_1 = require("../sensors/schema/light.schema");
 const garden_service_1 = require("../garden/garden.service");
+const schedule_1 = require("@nestjs/schedule");
 let ReportService = class ReportService {
     constructor(avgdayModel, avgmonthModel, humidityModel, lightModel, soilmoistureModel, temperatureModel, gardenService) {
         this.avgdayModel = avgdayModel;
@@ -33,18 +33,18 @@ let ReportService = class ReportService {
         this.soilmoistureModel = soilmoistureModel;
         this.temperatureModel = temperatureModel;
         this.gardenService = gardenService;
-        schedule.scheduleJob('0 0 * * *', () => {
-            this.calculateAverageByDay('temperature');
-            this.calculateAverageByDay('humidity');
-            this.calculateAverageByDay('soilmoisture');
-            this.calculateAverageByDay('light');
-        });
-        schedule.scheduleJob('0 0 1 * *', () => {
-            this.calculateAverageByMonth('temperature');
-            this.calculateAverageByMonth('humidity');
-            this.calculateAverageByMonth('soilmoisture');
-            this.calculateAverageByMonth('light');
-        });
+    }
+    async reportEveryDay() {
+        await this.calculateAverageByDay('temperature');
+        await this.calculateAverageByDay('humidity');
+        await this.calculateAverageByDay('soilmoisture');
+        await this.calculateAverageByDay('light');
+    }
+    async reportEveryMonth() {
+        await this.calculateAverageByMonth('temperature');
+        await this.calculateAverageByMonth('humidity');
+        await this.calculateAverageByMonth('soilmoisture');
+        await this.calculateAverageByMonth('light');
     }
     async calculateAverageByDay(type) {
         let model;
@@ -239,6 +239,18 @@ let ReportService = class ReportService {
         return result;
     }
 };
+__decorate([
+    (0, schedule_1.Cron)('0 0 * * *'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ReportService.prototype, "reportEveryDay", null);
+__decorate([
+    (0, schedule_1.Cron)('0 0 1 * *'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ReportService.prototype, "reportEveryMonth", null);
 ReportService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(avg_day_schema_1.AVGDay.name)),

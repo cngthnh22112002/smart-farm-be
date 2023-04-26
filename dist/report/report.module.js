@@ -19,11 +19,13 @@ const light_schema_1 = require("../sensors/schema/light.schema");
 const soilmoisture_schema_1 = require("../sensors/schema/soilmoisture.schema");
 const temperature_schema_1 = require("../sensors/schema/temperature.schema");
 const garden_module_1 = require("../garden/garden.module");
+const schedule_1 = require("@nestjs/schedule");
 let ReportModule = class ReportModule {
 };
 ReportModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            schedule_1.ScheduleModule.forRoot(),
             auth_module_1.AuthModule,
             garden_module_1.GardenModule,
             mongoose_1.MongooseModule.forFeature([{ name: avg_day_schema_1.AVGDay.name, schema: avg_day_schema_1.AVGDaySchema }]),

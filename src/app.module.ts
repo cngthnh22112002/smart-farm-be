@@ -12,8 +12,8 @@ import { NotificationModule } from './notification/notification.module';
 import { DictionaryModule } from './dictionary/dictionary.module';
 import { DevicesModule } from './devices/devices.module';
 import { ShareModule } from './share/share.module';
-import { ReportService } from './report/report.service';
 import { ReportModule } from './report/report.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
@@ -22,6 +22,7 @@ import { ReportModule } from './report/report.module';
       envFilePath: '.env',
       isGlobal: true
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     MongooseConnectiton,
     UserModule,
