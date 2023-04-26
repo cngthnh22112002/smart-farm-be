@@ -86,13 +86,31 @@ let AdafruitService = class AdafruitService {
                 await this.sensorsService.createLight(user, record);
                 if (lux < 2000) {
                     this.socketService.server.emit('led', '1');
-                    this.shareService.setFanStatus(message.toString());
+                    this.shareService.setFanStatus('1');
                     this.publish(client, 'iot-control.led', '1');
+                    if (this.shareService.getLedStatus() === '0') {
+                        const noti = {
+                            title: "Bật đèn",
+                            message: `Độ sáng thấp ở vườn ${garden.name}`,
+                            isRead: undefined,
+                            createdAt: undefined
+                        };
+                        this.notificationService.createNotification(user, noti);
+                    }
                 }
                 else if (lux > 2000) {
                     this.socketService.server.emit('led', '0');
-                    this.shareService.setFanStatus(message.toString());
+                    this.shareService.setFanStatus('0');
                     this.publish(client, 'iot-control.led', '0');
+                    if (this.shareService.getLedStatus() === '1') {
+                        const noti = {
+                            title: "Tắt đèn",
+                            message: `Độ sáng cao ở vườn ${garden.name}`,
+                            isRead: undefined,
+                            createdAt: undefined
+                        };
+                        this.notificationService.createNotification(user, noti);
+                    }
                 }
             }
             if (topic == this.feed + 'iot-sensor.sm') {
@@ -110,13 +128,31 @@ let AdafruitService = class AdafruitService {
                 await this.sensorsService.createSm(user, record);
                 if (sm < 5) {
                     this.socketService.server.emit('pump', '1');
-                    this.shareService.setFanStatus(message.toString());
+                    this.shareService.setFanStatus('1');
                     this.publish(client, 'iot-control.pump', '1');
+                    if (this.shareService.getPumpStatus() === '0') {
+                        const noti = {
+                            title: "Bật máy bơm",
+                            message: `Độ ẩm đất thấp ở vườn ${garden.name}`,
+                            isRead: undefined,
+                            createdAt: undefined
+                        };
+                        this.notificationService.createNotification(user, noti);
+                    }
                 }
                 else if (sm > 5) {
                     this.socketService.server.emit('pump', '0');
-                    this.shareService.setFanStatus(message.toString());
+                    this.shareService.setFanStatus('0');
                     this.publish(client, 'iot-control.pump', '0');
+                    if (this.shareService.getPumpStatus() === '1') {
+                        const noti = {
+                            title: "Tắt máy bơm",
+                            message: `Độ ẩm đất cao ở vườn ${garden.name}`,
+                            isRead: undefined,
+                            createdAt: undefined
+                        };
+                        this.notificationService.createNotification(user, noti);
+                    }
                 }
             }
             if (topic == this.feed + 'iot-sensor.humi') {
@@ -134,13 +170,31 @@ let AdafruitService = class AdafruitService {
                 await this.sensorsService.createHumi(user, record);
                 if (humi < 50) {
                     this.socketService.server.emit('pump', '1');
-                    this.shareService.setFanStatus(message.toString());
+                    this.shareService.setFanStatus('1');
                     this.publish(client, 'iot-control.pump', '1');
+                    if (this.shareService.getPumpStatus() === '0') {
+                        const noti = {
+                            title: "Bật máy bơm",
+                            message: `Độ ẩm môi trường thấp ở vườn ${garden.name}`,
+                            isRead: undefined,
+                            createdAt: undefined
+                        };
+                        this.notificationService.createNotification(user, noti);
+                    }
                 }
                 else if (humi > 50) {
                     this.socketService.server.emit('pump', '0');
-                    this.shareService.setFanStatus(message.toString());
+                    this.shareService.setFanStatus('0');
                     this.publish(client, 'iot-control.pump', '0');
+                    if (this.shareService.getPumpStatus() === '1') {
+                        const noti = {
+                            title: "Tắt máy bơm",
+                            message: `Độ ẩm môi trường cao ở vườn ${garden.name}`,
+                            isRead: undefined,
+                            createdAt: undefined
+                        };
+                        this.notificationService.createNotification(user, noti);
+                    }
                 }
             }
             if (topic == this.feed + 'iot-sensor.temp') {
@@ -158,13 +212,31 @@ let AdafruitService = class AdafruitService {
                 await this.sensorsService.createTemp(user, record);
                 if (temp > 27) {
                     this.socketService.server.emit('fan', '1');
-                    this.shareService.setFanStatus(message.toString());
+                    this.shareService.setFanStatus('1');
                     this.publish(client, 'iot-control.fan', '1');
+                    if (this.shareService.getFanStatus() === '0') {
+                        const noti = {
+                            title: "Bật quạt",
+                            message: `Nhiệt độ cao ở vườn ${garden.name}`,
+                            isRead: undefined,
+                            createdAt: undefined
+                        };
+                        this.notificationService.createNotification(user, noti);
+                    }
                 }
                 else if (temp < 27) {
                     this.socketService.server.emit('fan', '0');
-                    this.shareService.setFanStatus(message.toString());
+                    this.shareService.setFanStatus('1');
                     this.publish(client, 'iot-control.fan', '0');
+                    if (this.shareService.getFanStatus() === '1') {
+                        const noti = {
+                            title: "Tắt quạt",
+                            message: `Nhiệt độ thấp ở vườn ${garden.name}`,
+                            isRead: undefined,
+                            createdAt: undefined
+                        };
+                        this.notificationService.createNotification(user, noti);
+                    }
                 }
             }
             if (topic == this.feed + 'iot-control.fan') {
